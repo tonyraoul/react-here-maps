@@ -170,3 +170,4 @@ typings/modules
 build
 test/**/*.js
 test/**/*.js.map
+package-lock.json

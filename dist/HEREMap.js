@@ -91,7 +91,7 @@ var HEREMap = /** @class */ (function (_super) {
     };
     HEREMap.prototype.render = function () {
         var children = this.props.children;
-        return (React.createElement("div", null,
+        return (React.createElement("div", { className: "heremap", style: { height: "100%" } },
             React.createElement("div", { className: "map-container", id: "map-container-" + lodash_1.uniqueId(), style: { height: "100%" } }, children)));
     };
     HEREMap.prototype.resizeMap = function () {

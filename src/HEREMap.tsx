@@ -145,7 +145,7 @@ export class HEREMap
     const { children } = this.props;
 
     return (
-      <div>
+      <div className="heremap" style={{height: "100%"}}>
         <div
           className="map-container"
           id={`map-container-${uniqueId()}`}

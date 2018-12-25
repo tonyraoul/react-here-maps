@@ -1,3 +1,9 @@
+### Unofficial fork
+
+#### Differences from original package
+- Support for React ^16.4
+- Height: 100% in parent to avoid 0px height bug
+
 react-here-maps
 ==============
 

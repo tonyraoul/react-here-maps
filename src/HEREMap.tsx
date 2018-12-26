@@ -41,6 +41,7 @@ export class HEREMap
   implements React.ChildContextProvider<HEREMapChildContext> {
   public static childContextTypes = {
     map: PropTypes.object,
+    markersGroup: PropTypes.object,
   };
 
   // add typedefs for the HMapMethods mixin

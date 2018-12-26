@@ -36,6 +36,7 @@ var HEREMap = /** @class */ (function (_super) {
         _this.resizeMap = _this.resizeMap.bind(_this);
         // debounce the resize map method
         _this.debouncedResizeMap = lodash_1.debounce(_this.resizeMap, 200);
+        _this.zoomOnMarkers = _this.zoomOnMarkers.bind(_this);
         return _this;
     }
     HEREMap.prototype.zoomOnMarkers = function () {

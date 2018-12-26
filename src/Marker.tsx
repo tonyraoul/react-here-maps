@@ -44,10 +44,10 @@ export class Marker extends React.Component<MarkerProps, object> {
 
   // remove the marker on unmount of the component
   public componentWillUnmount() {
-    const { map, markersGroup } = this.context;
+    const { map } = this.context;
 
     if (this.marker) {
-      map.removeObject(markersGroup);
+      map.removeObject(this.marker);
     }
   }
 

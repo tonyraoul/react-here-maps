@@ -35,9 +35,9 @@ var Marker = /** @class */ (function (_super) {
     };
     // remove the marker on unmount of the component
     Marker.prototype.componentWillUnmount = function () {
-        var _a = this.context, map = _a.map, markersGroup = _a.markersGroup;
+        var map = this.context.map;
         if (this.marker) {
-            map.removeObject(markersGroup);
+            map.removeObject(this.marker);
         }
     };
     Marker.prototype.render = function () {

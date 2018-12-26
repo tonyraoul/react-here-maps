@@ -103,7 +103,8 @@ var HEREMap = /** @class */ (function (_super) {
         }
     };
     HEREMap.childContextTypes = {
-        map: PropTypes.object
+        map: PropTypes.object,
+        markersGroup: PropTypes.object
     };
     HEREMap = __decorate([
         h_map_methods_1["default"]

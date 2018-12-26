@@ -35,9 +35,9 @@ var Marker = /** @class */ (function (_super) {
     };
     // remove the marker on unmount of the component
     Marker.prototype.componentWillUnmount = function () {
-        var map = this.context.map;
+        var _a = this.context, map = _a.map, markersGroup = _a.markersGroup;
         if (this.marker) {
-            map.removeObject(this.marker);
+            map.removeObject(markersGroup);
         }
     };
     Marker.prototype.render = function () {
@@ -48,8 +48,8 @@ var Marker = /** @class */ (function (_super) {
         return null;
     };
     Marker.prototype.addMarkerToMap = function () {
-        var map = this.context.map;
-        var _a = this.props, children = _a.children, bitmap = _a.bitmap, lat = _a.lat, lng = _a.lng;
+        var _a = this.context, map = _a.map, markersGroup = _a.markersGroup;
+        var _b = this.props, children = _b.children, bitmap = _b.bitmap, lat = _b.lat, lng = _b.lng;
         var marker;
         if (React.Children.count(children) > 0) {
             // if children are provided, we render the provided react
@@ -60,7 +60,7 @@ var Marker = /** @class */ (function (_super) {
             // then create a dom marker instance and attach it to the map,
             // provided via context
             marker = new H.map.DomMarker({ lat: lat, lng: lng }, { icon: icon });
-            map.addObject(marker);
+            markersGroup.addObject(marker);
         }
         else if (bitmap) {
             // if we have an image url and no react children, create a
@@ -68,12 +68,12 @@ var Marker = /** @class */ (function (_super) {
             var icon = get_marker_icon_1["default"](bitmap);
             // then create a normal marker instance and attach it to the map
             marker = new H.map.Marker({ lat: lat, lng: lng }, { icon: icon });
-            map.addObject(marker);
+            markersGroup.addObject(marker);
         }
         else {
             // create a default marker at the provided location
             marker = new H.map.Marker({ lat: lat, lng: lng });
-            map.addObject(marker);
+            markersGroup.addObject(marker);
         }
         this.marker = marker;
     };
@@ -82,7 +82,8 @@ var Marker = /** @class */ (function (_super) {
     };
     // define the context types that are passed down from a <HEREMap> instance
     Marker.contextTypes = {
-        map: PropTypes.object
+        map: PropTypes.object,
+        markersGroup: PropTypes.object
     };
     return Marker;
 }(React.Component));

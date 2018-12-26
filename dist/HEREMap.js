@@ -39,8 +39,8 @@ var HEREMap = /** @class */ (function (_super) {
         return _this;
     }
     HEREMap.prototype.getChildContext = function () {
-        var map = this.state.map;
-        return { map: map };
+        var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
+        return { map: map, markersGroup: markersGroup };
     };
     HEREMap.prototype.componentDidMount = function () {
         var _this = this;
@@ -61,6 +61,8 @@ var HEREMap = /** @class */ (function (_super) {
                 pixelRatio: hidpi ? 2 : 1,
                 zoom: zoom
             });
+            var markersGroup = new H.map.Group();
+            map.addObject(markersGroup);
             if (interactive !== false) {
                 // make the map interactive
                 // MapEvents enables the event system
@@ -76,7 +78,7 @@ var HEREMap = /** @class */ (function (_super) {
             // make the map resize when the window gets resized
             window.addEventListener("resize", _this.debouncedResizeMap);
             // attach the map object to the component"s state
-            _this.setState({ map: map });
+            _this.setState({ map: map, markersGroup: markersGroup });
         });
     };
     HEREMap.prototype.componentWillMount = function () {

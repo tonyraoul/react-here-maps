@@ -14,6 +14,7 @@ export interface HEREMapState {
     map?: H.Map;
     behavior?: H.mapevents.Behavior;
     ui?: H.ui.UI;
+    markersGroup?: H.map.Group;
 }
 export interface HEREMapChildContext {
     map: H.Map;
@@ -31,6 +32,7 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
     constructor(props: HEREMapProps, context: object);
     getChildContext(): {
         map: H.Map;
+        markersGroup: H.map.Group;
     };
     componentDidMount(): void;
     componentWillMount(): void;

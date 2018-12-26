@@ -17,6 +17,7 @@ export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
 // declare an interface containing the potential context parameters
 export interface MarkerContext {
   map: H.Map;
+  markersGroup: H.map.Group;
 }
 
 // export the Marker React component from this module
@@ -24,6 +25,7 @@ export class Marker extends React.Component<MarkerProps, object> {
   // define the context types that are passed down from a <HEREMap> instance
   public static contextTypes = {
     map: PropTypes.object,
+    markersGroup: PropTypes.object,
   };
 
   public context: MarkerContext;
@@ -42,10 +44,10 @@ export class Marker extends React.Component<MarkerProps, object> {
 
   // remove the marker on unmount of the component
   public componentWillUnmount() {
-    const { map } = this.context;
+    const { map, markersGroup } = this.context;
 
     if (this.marker) {
-      map.removeObject(this.marker);
+      map.removeObject(markersGroup);
     }
   }
 
@@ -62,6 +64,7 @@ export class Marker extends React.Component<MarkerProps, object> {
   private addMarkerToMap() {
     const {
       map,
+      markersGroup,
     } = this.context;
 
     const {
@@ -88,7 +91,7 @@ export class Marker extends React.Component<MarkerProps, object> {
       // then create a dom marker instance and attach it to the map,
       // provided via context
       marker = new H.map.DomMarker({lat, lng}, {icon});
-      map.addObject(marker);
+      markersGroup.addObject(marker);
     } else if (bitmap) {
       // if we have an image url and no react children, create a
       // regular icon instance
@@ -96,11 +99,11 @@ export class Marker extends React.Component<MarkerProps, object> {
 
       // then create a normal marker instance and attach it to the map
       marker = new H.map.Marker({lat, lng}, {icon});
-      map.addObject(marker);
+      markersGroup.addObject(marker);
     } else {
       // create a default marker at the provided location
       marker = new H.map.Marker({lat, lng});
-      map.addObject(marker);
+      markersGroup.addObject(marker);
     }
 
     this.marker = marker;

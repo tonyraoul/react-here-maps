@@ -26,6 +26,7 @@ export interface HEREMapState {
   map?: H.Map;
   behavior?: H.mapevents.Behavior;
   ui?: H.ui.UI;
+  markersGroup?: H.map.Group;
 }
 
 // declare an interface containing the context to be passed through the heirarchy
@@ -64,8 +65,8 @@ export class HEREMap
   }
 
   public getChildContext() {
-    const {map} = this.state;
-    return {map};
+    const {map, markersGroup} = this.state;
+    return {map, markersGroup};
   }
 
   public componentDidMount() {
@@ -102,7 +103,8 @@ export class HEREMap
           zoom,
         },
       );
-
+      const markersGroup = new H.map.Group();
+      map.addObject(markersGroup)
       if (interactive !== false) {
         // make the map interactive
         // MapEvents enables the event system
@@ -122,7 +124,7 @@ export class HEREMap
       window.addEventListener("resize", this.debouncedResizeMap);
 
       // attach the map object to the component"s state
-      this.setState({ map });
+      this.setState({ map, markersGroup });
     });
   }
 

@@ -22,6 +22,7 @@ export interface HEREMapChildContext {
 export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState> implements React.ChildContextProvider<HEREMapChildContext> {
     static childContextTypes: {
         map: PropTypes.Requireable<object>;
+        markersGroup: PropTypes.Requireable<object>;
     };
     getElement: () => Element;
     getMap: () => H.Map;

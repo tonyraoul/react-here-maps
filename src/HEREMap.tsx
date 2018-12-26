@@ -63,8 +63,13 @@ export class HEREMap
 
     // debounce the resize map method
     this.debouncedResizeMap = debounce(this.resizeMap, 200);
+    this.zoomOnMarkers = this.zoomOnMarkers.bind(this)
   }
 
+  public zoomOnMarkers() {
+    const { map, markersGroup } = this.state;
+    map.setViewBounds(markersGroup.getBounds());
+  }
   public getChildContext() {
     const {map, markersGroup} = this.state;
     return {map, markersGroup};

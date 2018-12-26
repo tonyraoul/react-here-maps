@@ -38,6 +38,10 @@ var HEREMap = /** @class */ (function (_super) {
         _this.debouncedResizeMap = lodash_1.debounce(_this.resizeMap, 200);
         return _this;
     }
+    HEREMap.prototype.zoomOnMarkers = function () {
+        var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
+        map.setViewBounds(markersGroup.getBounds());
+    };
     HEREMap.prototype.getChildContext = function () {
         var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
         return { map: map, markersGroup: markersGroup };

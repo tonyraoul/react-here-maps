@@ -32,7 +32,7 @@ export class Route extends React.Component<RoutesProps, object> {
 
   public componentWillReceiveProps(nextProps: RoutesProps) {
     const { map, routesGroup } = this.context;
-
+    // it's cheaper to remove and add instead of deep comparision
     if (this.route) {
       routesGroup.removeObject(this.routeLine);
     }

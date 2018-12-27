@@ -6,4 +6,6 @@ var HEREMap_1 = require("./HEREMap");
 exports.HEREMap = HEREMap_1["default"];
 var Marker_1 = require("./Marker");
 exports.Marker = Marker_1["default"];
+var Route_1 = require("./Route");
+exports.Route = Route_1["default"];
 exports["default"] = HEREMap_1["default"];

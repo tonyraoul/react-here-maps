@@ -75,7 +75,6 @@ export class Marker extends React.Component<MarkerProps, object> {
     } = this.props;
 
     let marker: H.map.DomMarker | H.map.Marker;
-
     if (React.Children.count(children) > 0) {
       // if children are provided, we render the provided react
       // code to an html string

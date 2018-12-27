@@ -1,5 +1,6 @@
 import Circle from "./Circle";
 import HEREMap from "./HEREMap";
 import Marker from "./Marker";
-export { Circle, HEREMap, Marker, };
+import Route from "./Route";
+export { Circle, HEREMap, Marker, Route, };
 export default HEREMap;

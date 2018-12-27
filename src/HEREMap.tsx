@@ -19,6 +19,7 @@ export interface HEREMapProps extends H.Map.Options {
   hidpi?: boolean;
   interactive?: boolean;
   secure?: boolean;
+  routes?: object[];
 }
 
 // declare an interface containing the potential state flags
@@ -27,6 +28,7 @@ export interface HEREMapState {
   behavior?: H.mapevents.Behavior;
   ui?: H.ui.UI;
   markersGroup?: H.map.Group;
+  routesGroup?: H.map.Group;
 }
 
 // declare an interface containing the context to be passed through the heirarchy
@@ -42,6 +44,7 @@ export class HEREMap
   public static childContextTypes = {
     map: PropTypes.object,
     markersGroup: PropTypes.object,
+    routesGroup: PropTypes.object,
   };
 
   // add typedefs for the HMapMethods mixin
@@ -68,11 +71,12 @@ export class HEREMap
 
   public zoomOnMarkers() {
     const { map, markersGroup } = this.state;
-    map.setViewBounds(markersGroup.getBounds());
+    const viewBounds = markersGroup.getBounds();
+    if (viewBounds) map.setViewBounds(viewBounds);
   }
   public getChildContext() {
-    const {map, markersGroup} = this.state;
-    return {map, markersGroup};
+    const {map, markersGroup, routesGroup} = this.state;
+    return {map, markersGroup, routesGroup};
   }
 
   public componentDidMount() {
@@ -85,6 +89,7 @@ export class HEREMap
         interactive,
         secure,
         zoom,
+        routes,
       } = this.props;
 
       // get the platform to base the maps on
@@ -110,7 +115,9 @@ export class HEREMap
         },
       );
       const markersGroup = new H.map.Group();
+      const routesGroup = new H.map.Group();
       map.addObject(markersGroup)
+      map.addObject(routesGroup)
       if (interactive !== false) {
         // make the map interactive
         // MapEvents enables the event system
@@ -130,15 +137,13 @@ export class HEREMap
       window.addEventListener("resize", this.debouncedResizeMap);
 
       // attach the map object to the component"s state
-      this.setState({ map, markersGroup });
+      this.setState({ map, markersGroup, routesGroup });
     });
   }
-
   public componentWillMount() {
     const {
       secure,
     } = this.props;
-
     cache(getScriptMap(secure === true));
     const stylesheetUrl = `${secure === true ? "https:" : ""}//js.api.here.com/v3/3.0/mapsjs-ui.css`;
     getLink(stylesheetUrl, "HERE Maps UI");
@@ -151,7 +156,6 @@ export class HEREMap
 
   public render() {
     const { children } = this.props;
-
     return (
       <div className="heremap" style={{height: "100%"}}>
         <div

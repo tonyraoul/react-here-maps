@@ -41,16 +41,18 @@ var HEREMap = /** @class */ (function (_super) {
     }
     HEREMap.prototype.zoomOnMarkers = function () {
         var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
-        map.setViewBounds(markersGroup.getBounds());
+        var viewBounds = markersGroup.getBounds();
+        if (viewBounds)
+            map.setViewBounds(viewBounds);
     };
     HEREMap.prototype.getChildContext = function () {
-        var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
-        return { map: map, markersGroup: markersGroup };
+        var _a = this.state, map = _a.map, markersGroup = _a.markersGroup, routesGroup = _a.routesGroup;
+        return { map: map, markersGroup: markersGroup, routesGroup: routesGroup };
     };
     HEREMap.prototype.componentDidMount = function () {
         var _this = this;
         cache_1.onAllLoad(function () {
-            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom;
+            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes;
             // get the platform to base the maps on
             var platform = get_platform_1["default"]({
                 app_code: appCode,
@@ -67,7 +69,9 @@ var HEREMap = /** @class */ (function (_super) {
                 zoom: zoom
             });
             var markersGroup = new H.map.Group();
+            var routesGroup = new H.map.Group();
             map.addObject(markersGroup);
+            map.addObject(routesGroup);
             if (interactive !== false) {
                 // make the map interactive
                 // MapEvents enables the event system
@@ -83,7 +87,7 @@ var HEREMap = /** @class */ (function (_super) {
             // make the map resize when the window gets resized
             window.addEventListener("resize", _this.debouncedResizeMap);
             // attach the map object to the component"s state
-            _this.setState({ map: map, markersGroup: markersGroup });
+            _this.setState({ map: map, markersGroup: markersGroup, routesGroup: routesGroup });
         });
     };
     HEREMap.prototype.componentWillMount = function () {
@@ -109,7 +113,8 @@ var HEREMap = /** @class */ (function (_super) {
     };
     HEREMap.childContextTypes = {
         map: PropTypes.object,
-        markersGroup: PropTypes.object
+        markersGroup: PropTypes.object,
+        routesGroup: PropTypes.object
     };
     HEREMap = __decorate([
         h_map_methods_1["default"]

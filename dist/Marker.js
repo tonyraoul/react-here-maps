@@ -21,8 +21,8 @@ var get_marker_icon_1 = require("./utils/get-marker-icon");
 // export the Marker React component from this module
 var Marker = /** @class */ (function (_super) {
     __extends(Marker, _super);
-    function Marker() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function Marker(props, context) {
+        return _super.call(this, props, context) || this;
     }
     // change the position automatically if the props get changed
     Marker.prototype.componentWillReceiveProps = function (nextProps) {
@@ -60,6 +60,8 @@ var Marker = /** @class */ (function (_super) {
             // then create a dom marker instance and attach it to the map,
             // provided via context
             marker = new H.map.DomMarker({ lat: lat, lng: lng }, { icon: icon });
+            marker.draggable = true;
+            marker.setData(this.props.data);
             markersGroup.addObject(marker);
         }
         else if (bitmap) {

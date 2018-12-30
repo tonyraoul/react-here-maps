@@ -9,9 +9,10 @@ import getDomMarkerIcon from "./utils/get-dom-marker-icon";
 import getMarkerIcon from "./utils/get-marker-icon";
 
 // declare an interface containing the required and potential
-// props that can be passed to the HEREMap Marker component
+// props that can be passed to the HEREMap Marker componengetMartkerIdt
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   bitmap?: string;
+  data? :any;
 }
 
 // declare an interface containing the potential context parameters
@@ -27,7 +28,9 @@ export class Marker extends React.Component<MarkerProps, object> {
     map: PropTypes.object,
     markersGroup: PropTypes.object,
   };
-
+  public constructor (props: MarkerProps, context: MarkerContext) {
+    super(props, context)
+  }
   public context: MarkerContext;
 
   private marker: H.map.DomMarker | H.map.Marker;
@@ -41,7 +44,6 @@ export class Marker extends React.Component<MarkerProps, object> {
       });
     }
   }
-
   // remove the marker on unmount of the component
   public componentWillUnmount() {
     const { map, markersGroup } = this.context;
@@ -53,7 +55,6 @@ export class Marker extends React.Component<MarkerProps, object> {
 
   public render(): JSX.Element {
     const {map} = this.context;
-
     if (map && !this.marker) {
       this.addMarkerToMap();
     }
@@ -90,7 +91,10 @@ export class Marker extends React.Component<MarkerProps, object> {
       // then create a dom marker instance and attach it to the map,
       // provided via context
       marker = new H.map.DomMarker({lat, lng}, {icon});
+      marker.draggable = true
+      marker.setData(this.props.data)
       markersGroup.addObject(marker);
+
     } else if (bitmap) {
       // if we have an image url and no react children, create a
       // regular icon instance

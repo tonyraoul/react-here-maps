@@ -3,6 +3,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
     bitmap?: string;
+    data?: any;
 }
 export interface MarkerContext {
     map: H.Map;
@@ -13,6 +14,7 @@ export declare class Marker extends React.Component<MarkerProps, object> {
         map: PropTypes.Requireable<object>;
         markersGroup: PropTypes.Requireable<object>;
     };
+    constructor(props: MarkerProps, context: MarkerContext);
     context: MarkerContext;
     private marker;
     componentWillReceiveProps(nextProps: MarkerProps): void;

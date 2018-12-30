@@ -67,8 +67,12 @@ export class HEREMap
     // debounce the resize map method
     this.debouncedResizeMap = debounce(this.resizeMap, 200);
     this.zoomOnMarkers = this.zoomOnMarkers.bind(this)
+    this.screenToGeo = this.screenToGeo.bind(this)
   }
-
+  public screenToGeo (x:number, y:number):H.geo.Point {
+    const { map } = this.state
+    return map.screenToGeo(x,y)
+  }
   public zoomOnMarkers() {
     const { map, markersGroup } = this.state;
     const viewBounds = markersGroup.getBounds();

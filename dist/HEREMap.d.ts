@@ -34,6 +34,7 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
     state: HEREMapState;
     private debouncedResizeMap;
     constructor(props: HEREMapProps, context: object);
+    screenToGeo(x: number, y: number): H.geo.Point;
     zoomOnMarkers(): void;
     getChildContext(): {
         map: H.Map;

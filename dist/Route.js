@@ -23,6 +23,7 @@ var Route = /** @class */ (function (_super) {
     }
     Route.prototype.componentWillReceiveProps = function (nextProps) {
         var _a = this.context, map = _a.map, routesGroup = _a.routesGroup;
+        // it's cheaper to remove and add instead of deep comparision
         if (this.route) {
             routesGroup.removeObject(this.routeLine);
         }

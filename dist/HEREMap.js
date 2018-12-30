@@ -37,8 +37,13 @@ var HEREMap = /** @class */ (function (_super) {
         // debounce the resize map method
         _this.debouncedResizeMap = lodash_1.debounce(_this.resizeMap, 200);
         _this.zoomOnMarkers = _this.zoomOnMarkers.bind(_this);
+        _this.screenToGeo = _this.screenToGeo.bind(_this);
         return _this;
     }
+    HEREMap.prototype.screenToGeo = function (x, y) {
+        var map = this.state.map;
+        return map.screenToGeo(x, y);
+    };
     HEREMap.prototype.zoomOnMarkers = function () {
         var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
         var viewBounds = markersGroup.getBounds();

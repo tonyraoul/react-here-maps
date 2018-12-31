@@ -45,16 +45,18 @@ var Route = /** @class */ (function (_super) {
     };
     Route.prototype.addRouteToMap = function (points) {
         var _a = this.context, map = _a.map, routesGroup = _a.routesGroup;
-        var route;
-        var routeLine;
-        route = new H.geo.LineString();
-        points.forEach(function (point) {
-            route.pushPoint(point);
-        });
-        routeLine = new H.map.Polyline(route, { style: { lineWidth: 4 } });
-        routesGroup.addObject(routeLine);
-        this.route = route;
-        this.routeLine = routeLine;
+        if (routesGroup) {
+            var route_1;
+            var routeLine = void 0;
+            route_1 = new H.geo.LineString();
+            points.forEach(function (point) {
+                route_1.pushPoint(point);
+            });
+            routeLine = new H.map.Polyline(route_1, { style: { lineWidth: 4 } });
+            routesGroup.addObject(routeLine);
+            this.route = route_1;
+            this.routeLine = routeLine;
+        }
     };
     // define the context types that are passed down from a <HEREMap> instance
     Route.contextTypes = {

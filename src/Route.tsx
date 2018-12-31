@@ -62,17 +62,18 @@ export class Route extends React.Component<RoutesProps, object> {
       map,
       routesGroup,
     } = this.context;
-
-    let route: H.geo.LineString;
-    let routeLine: H.map.Polyline;
-    route = new H.geo.LineString();
-    points.forEach(point => {
-      route.pushPoint(point as H.geo.Point);
-    })
-    routeLine = new H.map.Polyline(route, {style: { lineWidth: 4 }});
-    routesGroup.addObject(routeLine);
-    this.route = route;
-    this.routeLine = routeLine;
+    if (routesGroup) {
+      let route: H.geo.LineString;
+      let routeLine: H.map.Polyline;
+      route = new H.geo.LineString();
+      points.forEach(point => {
+        route.pushPoint(point as H.geo.Point);
+      })
+      routeLine = new H.map.Polyline(route, {style: { lineWidth: 4 }});
+      routesGroup.addObject(routeLine);
+      this.route = route;
+      this.routeLine = routeLine;
+    }
   }
 
 }

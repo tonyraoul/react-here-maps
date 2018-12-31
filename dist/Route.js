@@ -27,7 +27,7 @@ var Route = /** @class */ (function (_super) {
         if (this.route) {
             routesGroup.removeObject(this.routeLine);
         }
-        this.addRouteToMap();
+        this.addRouteToMap(nextProps.points);
     };
     // remove the marker on unmount of the component
     Route.prototype.componentWillUnmount = function () {
@@ -39,13 +39,12 @@ var Route = /** @class */ (function (_super) {
     Route.prototype.render = function () {
         var map = this.context.map;
         if (map && !this.route) {
-            this.addRouteToMap();
+            this.addRouteToMap(this.props.points);
         }
         return null;
     };
-    Route.prototype.addRouteToMap = function () {
+    Route.prototype.addRouteToMap = function (points) {
         var _a = this.context, map = _a.map, routesGroup = _a.routesGroup;
-        var points = this.props.points;
         var route;
         var routeLine;
         route = new H.geo.LineString();

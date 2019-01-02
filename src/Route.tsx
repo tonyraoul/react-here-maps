@@ -12,6 +12,7 @@ export interface RoutesProps {
     fillColor?: string;
     strokeColor?: string;
     lineWidth?: number;
+    data? :object;
 }
 
 // declare an interface containing the potential context parameters
@@ -65,7 +66,7 @@ export class Route extends React.Component<RoutesProps, object> {
       map,
       routesGroup,
     } = this.context;
-    const { lineWidth, fillColor, strokeColor } = this.props
+    const { lineWidth, fillColor, strokeColor, data } = this.props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;
@@ -73,7 +74,7 @@ export class Route extends React.Component<RoutesProps, object> {
       points.forEach(point => {
         route.pushPoint(point as H.geo.Point);
       })
-      routeLine = new H.map.Polyline(route, {style: { lineWidth, fillColor, strokeColor }});
+      routeLine = new H.map.Polyline(route, {style: { lineWidth, fillColor, strokeColor }, data });
       routesGroup.addObject(routeLine);
       this.route = route;
       this.routeLine = routeLine;

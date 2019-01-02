@@ -6,6 +6,7 @@ export interface RoutesProps {
     fillColor?: string;
     strokeColor?: string;
     lineWidth?: number;
+    data?: object;
 }
 export interface RoutesContext {
     map: H.Map;

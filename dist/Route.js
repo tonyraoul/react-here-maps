@@ -45,7 +45,7 @@ var Route = /** @class */ (function (_super) {
     };
     Route.prototype.addRouteToMap = function (points) {
         var _a = this.context, map = _a.map, routesGroup = _a.routesGroup;
-        var _b = this.props, lineWidth = _b.lineWidth, fillColor = _b.fillColor, strokeColor = _b.strokeColor;
+        var _b = this.props, lineWidth = _b.lineWidth, fillColor = _b.fillColor, strokeColor = _b.strokeColor, data = _b.data;
         if (routesGroup) {
             var route_1;
             var routeLine = void 0;
@@ -53,7 +53,7 @@ var Route = /** @class */ (function (_super) {
             points.forEach(function (point) {
                 route_1.pushPoint(point);
             });
-            routeLine = new H.map.Polyline(route_1, { style: { lineWidth: lineWidth, fillColor: fillColor, strokeColor: strokeColor } });
+            routeLine = new H.map.Polyline(route_1, { style: { lineWidth: lineWidth, fillColor: fillColor, strokeColor: strokeColor }, data: data });
             routesGroup.addObject(routeLine);
             this.route = route_1;
             this.routeLine = routeLine;

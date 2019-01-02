@@ -7,6 +7,7 @@ export interface RoutesProps {
     strokeColor?: string;
     lineWidth?: number;
     data?: object;
+    zIndex?: number;
 }
 export interface RoutesContext {
     map: H.Map;

@@ -45,6 +45,7 @@ var Route = /** @class */ (function (_super) {
     };
     Route.prototype.addRouteToMap = function (points) {
         var _a = this.context, map = _a.map, routesGroup = _a.routesGroup;
+        var _b = this.props, lineWidth = _b.lineWidth, fillColor = _b.fillColor, strokeColor = _b.strokeColor;
         if (routesGroup) {
             var route_1;
             var routeLine = void 0;
@@ -52,7 +53,7 @@ var Route = /** @class */ (function (_super) {
             points.forEach(function (point) {
                 route_1.pushPoint(point);
             });
-            routeLine = new H.map.Polyline(route_1, { style: { lineWidth: 4 } });
+            routeLine = new H.map.Polyline(route_1, { style: { lineWidth: lineWidth, fillColor: fillColor, strokeColor: strokeColor } });
             routesGroup.addObject(routeLine);
             this.route = route_1;
             this.routeLine = routeLine;
@@ -63,6 +64,7 @@ var Route = /** @class */ (function (_super) {
         map: PropTypes.object,
         routesGroup: PropTypes.object
     };
+    Route.defaultProps = { lineWidth: 4, fillColor: 'blue', strokeColor: 'blue' };
     return Route;
 }(React.Component));
 exports.Route = Route;

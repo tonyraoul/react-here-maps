@@ -9,6 +9,9 @@ import * as PropTypes from "prop-types";
 // props that can be passed to the HEREMap Marker component
 export interface RoutesProps {
     points?: object[];
+    fillColor?: string;
+    strokeColor?: string;
+    lineWidth?: number;
 }
 
 // declare an interface containing the potential context parameters
@@ -29,7 +32,7 @@ export class Route extends React.Component<RoutesProps, object> {
 
   private route: H.geo.LineString;
   private routeLine: H.map.Polyline;
-
+  static defaultProps = { lineWidth: 4, fillColor: 'blue', strokeColor: 'blue' }
   public componentWillReceiveProps(nextProps: RoutesProps) {
     const { map, routesGroup } = this.context;
     // it's cheaper to remove and add instead of deep comparision
@@ -62,6 +65,7 @@ export class Route extends React.Component<RoutesProps, object> {
       map,
       routesGroup,
     } = this.context;
+    const { lineWidth, fillColor, strokeColor } = this.props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;
@@ -69,7 +73,7 @@ export class Route extends React.Component<RoutesProps, object> {
       points.forEach(point => {
         route.pushPoint(point as H.geo.Point);
       })
-      routeLine = new H.map.Polyline(route, {style: { lineWidth: 4 }});
+      routeLine = new H.map.Polyline(route, {style: { lineWidth, fillColor, strokeColor }});
       routesGroup.addObject(routeLine);
       this.route = route;
       this.routeLine = routeLine;

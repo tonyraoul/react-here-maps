@@ -60,7 +60,7 @@ var Marker = /** @class */ (function (_super) {
             // then create a dom marker instance and attach it to the map,
             // provided via context
             marker = new H.map.DomMarker({ lat: lat, lng: lng }, { icon: icon });
-            marker.draggable = true;
+            marker.draggable = this.props.draggable;
             marker.setData(this.props.data);
             markersGroup.addObject(marker);
         }
@@ -87,6 +87,7 @@ var Marker = /** @class */ (function (_super) {
         map: PropTypes.object,
         markersGroup: PropTypes.object
     };
+    Marker.defaultProps = { draggable: false };
     return Marker;
 }(React.Component));
 exports.Marker = Marker;

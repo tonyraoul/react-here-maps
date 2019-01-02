@@ -55,7 +55,6 @@ var Route = /** @class */ (function (_super) {
             });
             routeLine = new H.map.Polyline(route_1, { style: { lineWidth: lineWidth, fillColor: fillColor, strokeColor: strokeColor }, zIndex: zIndex, data: data });
             routesGroup.addObject(routeLine);
-            console.log(routeLine.getZIndex());
             this.route = route_1;
             this.routeLine = routeLine;
         }

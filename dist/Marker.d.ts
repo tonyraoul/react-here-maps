@@ -4,6 +4,7 @@ import * as PropTypes from "prop-types";
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
     bitmap?: string;
     data?: any;
+    draggable?: boolean;
 }
 export interface MarkerContext {
     map: H.Map;
@@ -17,6 +18,9 @@ export declare class Marker extends React.Component<MarkerProps, object> {
     constructor(props: MarkerProps, context: MarkerContext);
     context: MarkerContext;
     private marker;
+    static defaultProps: {
+        draggable: boolean;
+    };
     componentWillReceiveProps(nextProps: MarkerProps): void;
     componentWillUnmount(): void;
     render(): JSX.Element;

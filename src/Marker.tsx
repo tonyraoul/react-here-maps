@@ -13,6 +13,7 @@ import getMarkerIcon from "./utils/get-marker-icon";
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   bitmap?: string;
   data? :any;
+  draggable? :boolean;
 }
 
 // declare an interface containing the potential context parameters
@@ -34,7 +35,7 @@ export class Marker extends React.Component<MarkerProps, object> {
   public context: MarkerContext;
 
   private marker: H.map.DomMarker | H.map.Marker;
-
+  static defaultProps = {draggable: false};
   // change the position automatically if the props get changed
   public componentWillReceiveProps(nextProps: MarkerProps) {
     if (nextProps.lat !== this.props.lat || nextProps.lng !== this.props.lng) {
@@ -91,7 +92,7 @@ export class Marker extends React.Component<MarkerProps, object> {
       // then create a dom marker instance and attach it to the map,
       // provided via context
       marker = new H.map.DomMarker({lat, lng}, {icon});
-      marker.draggable = true
+      marker.draggable = this.props.draggable;
       marker.setData(this.props.data)
       markersGroup.addObject(marker);
 

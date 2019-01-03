@@ -8,6 +8,7 @@ import cache, { onAllLoad } from "./utils/cache";
 import getLink from "./utils/get-link";
 import getPlatform from "./utils/get-platform";
 import getScriptMap from "./utils/get-script-map";
+import { Options } from "jsdom";
 
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap component
@@ -20,6 +21,7 @@ export interface HEREMapProps extends H.Map.Options {
   interactive?: boolean;
   secure?: boolean;
   routes?: object[];
+  transportData?: boolean;
 }
 
 // declare an interface containing the potential state flags
@@ -57,7 +59,7 @@ export class HEREMap
   public state: HEREMapState = {};
 
   private debouncedResizeMap: any;
-
+  public truckOverlayLayer: H.map.layer.TileLayer;
   constructor(props: HEREMapProps, context: object) {
     super(props, context);
 
@@ -106,7 +108,32 @@ export class HEREMap
       const defaultLayers = platform.createDefaultLayers({
         ppi: hidpi ? 320 : 72,
       });
-
+      const truckOverlayLayerOptions = {
+        label: 'Tile Info Overlay',
+        descr: "",
+        min: 8,
+        max: 20,
+        getURL: function( col, row, level )
+        {
+          return ["https://",
+          "1.base.maps.cit.api.here.com/maptile/2.1/truckonlytile/newest/normal.day/",
+          level,
+          "/",
+          col,
+          "/",
+          row,
+          "/256/png8",
+          "?style=fleet",
+          "&app_code=",
+          appCode,
+          "&app_id=",
+          appId
+          ].join("");
+        }
+      } as H.map.provider.ImageTileProvider.Options; 
+      const truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
+    
+      this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
       const hereMapEl = ReactDOM.findDOMNode(this);
 
       const map = new H.Map(
@@ -122,6 +149,7 @@ export class HEREMap
       const routesGroup = new H.map.Group();
       map.addObject(markersGroup)
       map.addObject(routesGroup)
+      if(this.props.transportData) map.addLayer(this.truckOverlayLayer)
       if (interactive !== false) {
         // make the map interactive
         // MapEvents enables the event system
@@ -136,13 +164,23 @@ export class HEREMap
           ui,
         });
       }
-
+      
       // make the map resize when the window gets resized
       window.addEventListener("resize", this.debouncedResizeMap);
 
       // attach the map object to the component"s state
       this.setState({ map, markersGroup, routesGroup });
     });
+  }
+  public componentWillReceiveProps(nextProps: HEREMapProps) {
+    if (this.props.transportData !== nextProps.transportData) {
+      if(nextProps.transportData) {
+        this.getMap().addLayer(this.truckOverlayLayer)
+      }
+      else {
+        this.getMap().removeLayer(this.truckOverlayLayer)
+      }
+    }
   }
   public componentWillMount() {
     const {

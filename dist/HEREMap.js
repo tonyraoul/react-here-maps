@@ -67,6 +67,30 @@ var HEREMap = /** @class */ (function (_super) {
             var defaultLayers = platform.createDefaultLayers({
                 ppi: hidpi ? 320 : 72
             });
+            var truckOverlayLayerOptions = {
+                label: 'Tile Info Overlay',
+                descr: "",
+                min: 8,
+                max: 20,
+                getURL: function (col, row, level) {
+                    return ["https://",
+                        "1.base.maps.cit.api.here.com/maptile/2.1/truckonlytile/newest/normal.day/",
+                        level,
+                        "/",
+                        col,
+                        "/",
+                        row,
+                        "/256/png8",
+                        "?style=fleet",
+                        "&app_code=",
+                        appCode,
+                        "&app_id=",
+                        appId
+                    ].join("");
+                }
+            };
+            var truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
+            _this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
             var hereMapEl = ReactDOM.findDOMNode(_this);
             var map = new H.Map(hereMapEl.querySelector(".map-container"), defaultLayers.normal.map, {
                 center: center,
@@ -77,6 +101,8 @@ var HEREMap = /** @class */ (function (_super) {
             var routesGroup = new H.map.Group();
             map.addObject(markersGroup);
             map.addObject(routesGroup);
+            if (_this.props.transportData)
+                map.addLayer(_this.truckOverlayLayer);
             if (interactive !== false) {
                 // make the map interactive
                 // MapEvents enables the event system
@@ -94,6 +120,16 @@ var HEREMap = /** @class */ (function (_super) {
             // attach the map object to the component"s state
             _this.setState({ map: map, markersGroup: markersGroup, routesGroup: routesGroup });
         });
+    };
+    HEREMap.prototype.componentWillReceiveProps = function (nextProps) {
+        if (this.props.transportData !== nextProps.transportData) {
+            if (nextProps.transportData) {
+                this.getMap().addLayer(this.truckOverlayLayer);
+            }
+            else {
+                this.getMap().removeLayer(this.truckOverlayLayer);
+            }
+        }
     };
     HEREMap.prototype.componentWillMount = function () {
         var secure = this.props.secure;

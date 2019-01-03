@@ -10,6 +10,7 @@ export interface HEREMapProps extends H.Map.Options {
     interactive?: boolean;
     secure?: boolean;
     routes?: object[];
+    transportData?: boolean;
 }
 export interface HEREMapState {
     map?: H.Map;
@@ -33,6 +34,7 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
     setZoom: (zoom: number) => void;
     state: HEREMapState;
     private debouncedResizeMap;
+    truckOverlayLayer: H.map.layer.TileLayer;
     constructor(props: HEREMapProps, context: object);
     screenToGeo(x: number, y: number): H.geo.Point;
     zoomOnMarkers(): void;
@@ -42,6 +44,7 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
         routesGroup: H.map.Group;
     };
     componentDidMount(): void;
+    componentWillReceiveProps(nextProps: HEREMapProps): void;
     componentWillMount(): void;
     componentWillUnmount(): void;
     render(): JSX.Element;

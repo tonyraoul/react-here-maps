@@ -61,7 +61,7 @@ var HEREMap = /** @class */ (function (_super) {
         var stylesheetUrl = (secure === true ? "https:" : "") + "//js.api.here.com/v3/3.0/mapsjs-ui.css";
         get_link_1["default"](stylesheetUrl, "HERE Maps UI");
         cache_1.onAllLoad(function () {
-            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes, trafficLayer = _a.trafficLayer;
+            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes, useSatellite = _a.useSatellite, trafficLayer = _a.trafficLayer;
             // get the platform to base the maps on
             var platform = get_platform_1["default"]({
                 app_code: appCode,
@@ -96,7 +96,7 @@ var HEREMap = /** @class */ (function (_super) {
             var truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
             _this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
             var hereMapEl = ReactDOM.findDOMNode(_this);
-            var baseLayer = trafficLayer ? _this.defaultLayers.normal.traffic : _this.defaultLayers.normal.map;
+            var baseLayer = _this.defaultLayers.normal.map;
             var map = new H.Map(hereMapEl.querySelector(".map-container"), baseLayer, {
                 center: center,
                 pixelRatio: hidpi ? 2 : 1,
@@ -120,6 +120,18 @@ var HEREMap = /** @class */ (function (_super) {
                     ui: ui
                 });
             }
+            if (trafficLayer) {
+                if (useSatellite)
+                    map.setBaseLayer(_this.defaultLayers.satellite.traffic);
+                else
+                    map.setBaseLayer(_this.defaultLayers.normal.traffic);
+            }
+            else {
+                if (useSatellite)
+                    map.setBaseLayer(_this.defaultLayers.satellite.map);
+                else
+                    map.setBaseLayer(_this.defaultLayers.normal.map);
+            }
             // make the map resize when the window gets resized
             window.addEventListener("resize", _this.debouncedResizeMap);
             // attach the map object to the component"s state
@@ -136,10 +148,16 @@ var HEREMap = /** @class */ (function (_super) {
         if (!map)
             return;
         if (nextProps.trafficLayer) {
-            map.setBaseLayer(this.defaultLayers.normal.traffic);
+            if (nextProps.useSatellite)
+                map.setBaseLayer(this.defaultLayers.satellite.traffic);
+            else
+                map.setBaseLayer(this.defaultLayers.normal.traffic);
         }
         else {
-            map.setBaseLayer(this.defaultLayers.normal.map);
+            if (nextProps.useSatellite)
+                map.setBaseLayer(this.defaultLayers.satellite.map);
+            else
+                map.setBaseLayer(this.defaultLayers.normal.map);
         }
         if (nextProps.transportData) {
             map.addLayer(this.truckOverlayLayer);

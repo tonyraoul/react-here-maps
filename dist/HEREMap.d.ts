@@ -13,6 +13,7 @@ export interface HEREMapProps extends H.Map.Options {
     transportData?: boolean;
     trafficLayer?: boolean;
     incidentsLayer?: boolean;
+    useSatellite?: boolean;
 }
 export interface HEREMapState {
     map?: H.Map;

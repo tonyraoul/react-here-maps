@@ -24,6 +24,7 @@ export interface HEREMapProps extends H.Map.Options {
   transportData?: boolean;
   trafficLayer? :boolean;
   incidentsLayer? :boolean;
+  useSatellite? :boolean;
 }
 
 // declare an interface containing the potential state flags
@@ -106,6 +107,7 @@ export class HEREMap
         secure,
         zoom,
         routes,
+        useSatellite,
         trafficLayer,
       } = this.props;
 
@@ -145,7 +147,7 @@ export class HEREMap
     
       this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
       const hereMapEl = ReactDOM.findDOMNode(this);
-      const baseLayer = trafficLayer?this.defaultLayers.normal.traffic:this.defaultLayers.normal.map;
+      const baseLayer = this.defaultLayers.normal.map;
       const map = new H.Map(
         hereMapEl.querySelector(".map-container"),
         baseLayer,
@@ -174,6 +176,14 @@ export class HEREMap
           ui,
         });
       }
+      if (trafficLayer) {
+        if(useSatellite) map.setBaseLayer(this.defaultLayers.satellite.traffic)
+        else map.setBaseLayer(this.defaultLayers.normal.traffic)
+       }
+       else {
+         if(useSatellite) map.setBaseLayer(this.defaultLayers.satellite.map)
+         else map.setBaseLayer(this.defaultLayers.normal.map)
+       }
       
       // make the map resize when the window gets resized
       window.addEventListener("resize", this.debouncedResizeMap);
@@ -192,10 +202,12 @@ export class HEREMap
     const map = this.getMap()
     if(!map) return
     if (nextProps.trafficLayer) {
-     map.setBaseLayer(this.defaultLayers.normal.traffic)
+     if(nextProps.useSatellite) map.setBaseLayer(this.defaultLayers.satellite.traffic)
+     else map.setBaseLayer(this.defaultLayers.normal.traffic)
     }
     else {
-      map.setBaseLayer(this.defaultLayers.normal.map)
+      if(nextProps.useSatellite) map.setBaseLayer(this.defaultLayers.satellite.map)
+      else map.setBaseLayer(this.defaultLayers.normal.map)
     }
     if(nextProps.transportData) {
       map.addLayer(this.truckOverlayLayer)

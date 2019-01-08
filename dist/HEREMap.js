@@ -56,15 +56,19 @@ var HEREMap = /** @class */ (function (_super) {
     };
     HEREMap.prototype.componentDidMount = function () {
         var _this = this;
+        var secure = this.props.secure;
+        cache_1["default"](get_script_map_1["default"](secure === true));
+        var stylesheetUrl = (secure === true ? "https:" : "") + "//js.api.here.com/v3/3.0/mapsjs-ui.css";
+        get_link_1["default"](stylesheetUrl, "HERE Maps UI");
         cache_1.onAllLoad(function () {
-            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes;
+            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes, trafficLayer = _a.trafficLayer;
             // get the platform to base the maps on
             var platform = get_platform_1["default"]({
                 app_code: appCode,
                 app_id: appId,
                 useHTTPS: secure === true
             });
-            var defaultLayers = platform.createDefaultLayers({
+            _this.defaultLayers = platform.createDefaultLayers({
                 ppi: hidpi ? 320 : 72
             });
             var truckOverlayLayerOptions = {
@@ -92,7 +96,8 @@ var HEREMap = /** @class */ (function (_super) {
             var truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
             _this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
             var hereMapEl = ReactDOM.findDOMNode(_this);
-            var map = new H.Map(hereMapEl.querySelector(".map-container"), defaultLayers.normal.map, {
+            var baseLayer = trafficLayer ? _this.defaultLayers.normal.traffic : _this.defaultLayers.normal.map;
+            var map = new H.Map(hereMapEl.querySelector(".map-container"), baseLayer, {
                 center: center,
                 pixelRatio: hidpi ? 2 : 1,
                 zoom: zoom
@@ -109,7 +114,7 @@ var HEREMap = /** @class */ (function (_super) {
                 // Behavior implements default interactions for pan/zoom
                 var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
                 // create the default UI for the map
-                var ui = H.ui.UI.createDefault(map, defaultLayers);
+                var ui = H.ui.UI.createDefault(map, _this.defaultLayers);
                 _this.setState({
                     behavior: behavior,
                     ui: ui
@@ -121,25 +126,33 @@ var HEREMap = /** @class */ (function (_super) {
             _this.setState({ map: map, markersGroup: markersGroup, routesGroup: routesGroup });
         });
     };
-    HEREMap.prototype.componentWillReceiveProps = function (nextProps) {
-        if (this.props.transportData !== nextProps.transportData) {
-            if (nextProps.transportData) {
-                this.getMap().addLayer(this.truckOverlayLayer);
-            }
-            else {
-                this.getMap().removeLayer(this.truckOverlayLayer);
-            }
-        }
-    };
-    HEREMap.prototype.componentWillMount = function () {
-        var secure = this.props.secure;
-        cache_1["default"](get_script_map_1["default"](secure === true));
-        var stylesheetUrl = (secure === true ? "https:" : "") + "//js.api.here.com/v3/3.0/mapsjs-ui.css";
-        get_link_1["default"](stylesheetUrl, "HERE Maps UI");
-    };
     HEREMap.prototype.componentWillUnmount = function () {
         // make the map resize when the window gets resized
         window.removeEventListener("resize", this.debouncedResizeMap);
+    };
+    // change the zoom and center automatically if the props get changed
+    HEREMap.prototype.componentWillReceiveProps = function (nextProps) {
+        var map = this.getMap();
+        if (!map)
+            return;
+        if (nextProps.trafficLayer) {
+            map.setBaseLayer(this.defaultLayers.normal.traffic);
+        }
+        else {
+            map.setBaseLayer(this.defaultLayers.normal.map);
+        }
+        if (nextProps.transportData) {
+            map.addLayer(this.truckOverlayLayer);
+        }
+        else {
+            map.removeLayer(this.truckOverlayLayer);
+        }
+        if (nextProps.incidentsLayer) {
+            map.addLayer(this.defaultLayers.incidents);
+        }
+        else {
+            map.removeLayer(this.defaultLayers.incidents);
+        }
     };
     HEREMap.prototype.render = function () {
         var children = this.props.children;

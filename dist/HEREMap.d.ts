@@ -11,6 +11,8 @@ export interface HEREMapProps extends H.Map.Options {
     secure?: boolean;
     routes?: object[];
     transportData?: boolean;
+    trafficLayer?: boolean;
+    incidentsLayer?: boolean;
 }
 export interface HEREMapState {
     map?: H.Map;
@@ -18,6 +20,7 @@ export interface HEREMapState {
     ui?: H.ui.UI;
     markersGroup?: H.map.Group;
     routesGroup?: H.map.Group;
+    trafficLayer?: boolean;
 }
 export interface HEREMapChildContext {
     map: H.Map;
@@ -35,6 +38,7 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
     state: HEREMapState;
     private debouncedResizeMap;
     truckOverlayLayer: H.map.layer.TileLayer;
+    defaultLayers: any;
     constructor(props: HEREMapProps, context: object);
     screenToGeo(x: number, y: number): H.geo.Point;
     zoomOnMarkers(): void;
@@ -44,9 +48,8 @@ export declare class HEREMap extends React.Component<HEREMapProps, HEREMapState>
         routesGroup: H.map.Group;
     };
     componentDidMount(): void;
-    componentWillReceiveProps(nextProps: HEREMapProps): void;
-    componentWillMount(): void;
     componentWillUnmount(): void;
+    componentWillReceiveProps(nextProps: HEREMapProps): void;
     render(): JSX.Element;
     private resizeMap;
 }

@@ -22,6 +22,8 @@ export interface HEREMapProps extends H.Map.Options {
   secure?: boolean;
   routes?: object[];
   transportData?: boolean;
+  trafficLayer? :boolean;
+  incidentsLayer? :boolean;
 }
 
 // declare an interface containing the potential state flags
@@ -31,6 +33,7 @@ export interface HEREMapState {
   ui?: H.ui.UI;
   markersGroup?: H.map.Group;
   routesGroup?: H.map.Group;
+  trafficLayer?: boolean;
 }
 
 // declare an interface containing the context to be passed through the heirarchy
@@ -60,6 +63,7 @@ export class HEREMap
 
   private debouncedResizeMap: any;
   public truckOverlayLayer: H.map.layer.TileLayer;
+  public defaultLayers: any;
   constructor(props: HEREMapProps, context: object) {
     super(props, context);
 
@@ -86,6 +90,12 @@ export class HEREMap
   }
 
   public componentDidMount() {
+    const {
+      secure,
+    } = this.props;
+    cache(getScriptMap(secure === true));
+    const stylesheetUrl = `${secure === true ? "https:" : ""}//js.api.here.com/v3/3.0/mapsjs-ui.css`;
+    getLink(stylesheetUrl, "HERE Maps UI");
     onAllLoad(() => {
       const {
         appId,
@@ -96,6 +106,7 @@ export class HEREMap
         secure,
         zoom,
         routes,
+        trafficLayer,
       } = this.props;
 
       // get the platform to base the maps on
@@ -104,8 +115,7 @@ export class HEREMap
         app_id: appId,
         useHTTPS: secure === true,
       });
-
-      const defaultLayers = platform.createDefaultLayers({
+      this.defaultLayers = platform.createDefaultLayers({
         ppi: hidpi ? 320 : 72,
       });
       const truckOverlayLayerOptions = {
@@ -135,10 +145,10 @@ export class HEREMap
     
       this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
       const hereMapEl = ReactDOM.findDOMNode(this);
-
+      const baseLayer = trafficLayer?this.defaultLayers.normal.traffic:this.defaultLayers.normal.map;
       const map = new H.Map(
         hereMapEl.querySelector(".map-container"),
-        defaultLayers.normal.map,
+        baseLayer,
         {
           center,
           pixelRatio: hidpi ? 2 : 1,
@@ -157,7 +167,7 @@ export class HEREMap
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
         // create the default UI for the map
-        const ui = H.ui.UI.createDefault(map, defaultLayers);
+        const ui = H.ui.UI.createDefault(map, this.defaultLayers);
 
         this.setState({
           behavior,
@@ -172,28 +182,31 @@ export class HEREMap
       this.setState({ map, markersGroup, routesGroup });
     });
   }
-  public componentWillReceiveProps(nextProps: HEREMapProps) {
-    if (this.props.transportData !== nextProps.transportData) {
-      if(nextProps.transportData) {
-        this.getMap().addLayer(this.truckOverlayLayer)
-      }
-      else {
-        this.getMap().removeLayer(this.truckOverlayLayer)
-      }
-    }
-  }
-  public componentWillMount() {
-    const {
-      secure,
-    } = this.props;
-    cache(getScriptMap(secure === true));
-    const stylesheetUrl = `${secure === true ? "https:" : ""}//js.api.here.com/v3/3.0/mapsjs-ui.css`;
-    getLink(stylesheetUrl, "HERE Maps UI");
-  }
 
   public componentWillUnmount() {
     // make the map resize when the window gets resized
     window.removeEventListener("resize", this.debouncedResizeMap);
+  }
+  // change the zoom and center automatically if the props get changed
+  public componentWillReceiveProps(nextProps: HEREMapProps) {
+    const map = this.getMap()
+    if(!map) return
+    if (nextProps.trafficLayer) {
+     map.setBaseLayer(this.defaultLayers.normal.traffic)
+    }
+    else {
+      map.setBaseLayer(this.defaultLayers.normal.map)
+    }
+    if(nextProps.transportData) {
+      map.addLayer(this.truckOverlayLayer)
+    } else {
+      map.removeLayer(this.truckOverlayLayer)
+    }
+    if(nextProps.incidentsLayer) {
+      map.addLayer(this.defaultLayers.incidents)
+    } else {
+      map.removeLayer(this.defaultLayers.incidents)
+    }
   }
 
   public render() {

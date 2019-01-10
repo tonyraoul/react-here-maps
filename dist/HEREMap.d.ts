@@ -14,6 +14,7 @@ export interface HEREMapProps extends H.Map.Options {
     trafficLayer?: boolean;
     incidentsLayer?: boolean;
     useSatellite?: boolean;
+    onMapAvailable?: (callback: H.Map) => void;
 }
 export interface HEREMapState {
     map?: H.Map;

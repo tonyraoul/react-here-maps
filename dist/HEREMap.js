@@ -61,7 +61,7 @@ var HEREMap = /** @class */ (function (_super) {
         var stylesheetUrl = (secure === true ? "https:" : "") + "//js.api.here.com/v3/3.0/mapsjs-ui.css";
         get_link_1["default"](stylesheetUrl, "HERE Maps UI");
         cache_1.onAllLoad(function () {
-            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes, useSatellite = _a.useSatellite, trafficLayer = _a.trafficLayer;
+            var _a = _this.props, appId = _a.appId, appCode = _a.appCode, center = _a.center, hidpi = _a.hidpi, interactive = _a.interactive, secure = _a.secure, zoom = _a.zoom, routes = _a.routes, useSatellite = _a.useSatellite, trafficLayer = _a.trafficLayer, onMapAvailable = _a.onMapAvailable;
             // get the platform to base the maps on
             var platform = get_platform_1["default"]({
                 app_code: appCode,
@@ -136,6 +136,7 @@ var HEREMap = /** @class */ (function (_super) {
             window.addEventListener("resize", _this.debouncedResizeMap);
             // attach the map object to the component"s state
             _this.setState({ map: map, markersGroup: markersGroup, routesGroup: routesGroup });
+            onMapAvailable(map);
         });
     };
     HEREMap.prototype.componentWillUnmount = function () {

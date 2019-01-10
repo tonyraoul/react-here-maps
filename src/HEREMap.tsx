@@ -25,6 +25,7 @@ export interface HEREMapProps extends H.Map.Options {
   trafficLayer? :boolean;
   incidentsLayer? :boolean;
   useSatellite? :boolean;
+  onMapAvailable? :(callback:H.Map) => void;
 }
 
 // declare an interface containing the potential state flags
@@ -109,6 +110,7 @@ export class HEREMap
         routes,
         useSatellite,
         trafficLayer,
+        onMapAvailable,
       } = this.props;
 
       // get the platform to base the maps on
@@ -190,6 +192,7 @@ export class HEREMap
 
       // attach the map object to the component"s state
       this.setState({ map, markersGroup, routesGroup });
+      onMapAvailable(map);
     });
   }
 

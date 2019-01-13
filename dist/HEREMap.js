@@ -44,11 +44,14 @@ var HEREMap = /** @class */ (function (_super) {
         var map = this.state.map;
         return map.screenToGeo(x, y);
     };
-    HEREMap.prototype.zoomOnMarkers = function () {
+    HEREMap.prototype.zoomOnMarkers = function (animate) {
+        if (animate === void 0) { animate = true; }
         var _a = this.state, map = _a.map, markersGroup = _a.markersGroup;
+        if (!markersGroup)
+            return;
         var viewBounds = markersGroup.getBounds();
         if (viewBounds)
-            map.setViewBounds(viewBounds);
+            map.setViewBounds(viewBounds, animate);
     };
     HEREMap.prototype.getChildContext = function () {
         var _a = this.state, map = _a.map, markersGroup = _a.markersGroup, routesGroup = _a.routesGroup;

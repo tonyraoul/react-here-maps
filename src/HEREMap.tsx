@@ -83,10 +83,11 @@ export class HEREMap
     const { map } = this.state
     return map.screenToGeo(x,y)
   }
-  public zoomOnMarkers() {
+  public zoomOnMarkers(animate: boolean = true) {
     const { map, markersGroup } = this.state;
-    const viewBounds = markersGroup.getBounds();
-    if (viewBounds) map.setViewBounds(viewBounds);
+    if (!markersGroup) return
+    const viewBounds = markersGroup.getBounds() ;
+    if (viewBounds) map.setViewBounds(viewBounds, animate);
   }
   public getChildContext() {
     const {map, markersGroup, routesGroup} = this.state;

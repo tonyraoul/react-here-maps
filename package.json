@@ -70,6 +70,7 @@
     "gulp": "^3.9.1",
     "gulp-sass": "^3.1.0",
     "gulp-typescript": "^3.2.0",
+    "gulp-watch": "^5.0.1",
     "highlight.js": "^9.12.0",
     "html-loader": "^0.4.3",
     "imports-loader": "^0.7.1",

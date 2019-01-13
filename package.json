@@ -1,6 +1,6 @@
 {
-  "name": "react-here-maps",
-  "version": "1.0",
+  "name": "@impargo/react-here-maps",
+  "version": "1.0.0",
   "description": "React.js HERE Maps component",
   "main": "dist/main.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Josh-ES/react-here-maps.git"
+    "url": "git+https://github.com/antoineraoulimpargo/react-here-maps.git"
   },
   "keywords": [
     "React.js",
@@ -39,9 +39,9 @@
   "author": "Josh-ES",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Josh-ES/react-here-maps/issues"
+    "url": "https://github.com/antoineraoulimpargo/react-here-maps/issues"
   },
-  "homepage": "https://github.com/Josh-ES/react-here-maps#readme",
+  "homepage": "https://github.com/antoineraoulimpargo/react-here-maps#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/chai": "^4.0.1",

@@ -11,7 +11,7 @@
     "coverage:remap": "remap-istanbul -i coverage/coverage.json -o coverage/coverage.json -t json -e node_modules,test",
     "coverage:report": "istanbul report",
     "coverage:post": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "prepublishOnly": "npm run pretest && gulp",
+    "prepublishOnly": "gulp",
     "lint": "tslint --config tslint.json --project tsconfig.json --type-check"
   },
   "repository": {

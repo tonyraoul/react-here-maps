@@ -4,6 +4,7 @@ var ts = require('gulp-typescript');
 var source = require('vinyl-source-stream');
 var webpack = require('webpack');
 var webpackStream = require('webpack-stream');
+var watch = require('gulp-watch');
 
 var tsProject = ts.createProject('tsconfig.json', {
   typescript: require('typescript'),
@@ -13,6 +14,13 @@ var tsProject = ts.createProject('tsconfig.json', {
 // default task
 gulp.task('default', ['transpile'], function() {
 
+});
+
+gulp.task('watch', function () {
+  // Endless stream mode
+  return watch(['src/**/*.ts', 'src/**/*.tsx', 'typings/index.d.ts', 'node_modules/typescript/lib/lib.es6.d.ts'], function () {
+    gulp.start('transpile')
+  });
 });
 
 // transpilation task from typescript to es5 javascript

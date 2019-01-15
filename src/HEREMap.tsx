@@ -26,7 +26,7 @@ export interface HEREMapProps extends H.Map.Options {
   incidentsLayer? :boolean;
   useSatellite? :boolean;
   disableMapSettings?: boolean;
-  onMapAvailable? :(map:H.Map, ui: H.ui.UI) => void;
+  onMapAvailable? :(state: HEREMapState) => void;
   language? :string;
 }
 
@@ -197,7 +197,7 @@ export class HEREMap
       window.addEventListener("resize", this.debouncedResizeMap);
 
       // attach the map object to the component"s state
-      this.setState({ map, markersGroup, routesGroup }, () => onMapAvailable(map, ui));
+      this.setState({ map, markersGroup, routesGroup }, () => onMapAvailable(this.state));
     });
   }
 

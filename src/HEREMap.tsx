@@ -26,7 +26,7 @@ export interface HEREMapProps extends H.Map.Options {
   incidentsLayer? :boolean;
   useSatellite? :boolean;
   disableMapSettings?: boolean;
-  onMapAvailable? :(map:H.Map, ui: H.ui.UI) => void;
+  onMapAvailable? :(state: HEREMapState) => void;
   language? :string;
 }
 
@@ -169,6 +169,7 @@ export class HEREMap
       map.addObject(markersGroup)
       map.addObject(routesGroup)
       if(this.props.transportData) map.addLayer(this.truckOverlayLayer)
+      let ui:H.ui.UI;
       if (interactive !== false) {
         // make the map interactive
         // MapEvents enables the event system
@@ -176,13 +177,12 @@ export class HEREMap
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
         // create the default UI for the map
-        const ui = H.ui.UI.createDefault(map, this.defaultLayers, language);
+        ui = H.ui.UI.createDefault(map, this.defaultLayers, language);
         disableMapSettings && ui.removeControl('mapsettings')
         this.setState({
           behavior,
           ui,
         });
-        onMapAvailable(map, ui);
       }
       if (trafficLayer) {
         if(useSatellite) map.setBaseLayer(this.defaultLayers.satellite.traffic)
@@ -197,7 +197,7 @@ export class HEREMap
       window.addEventListener("resize", this.debouncedResizeMap);
 
       // attach the map object to the component"s state
-      this.setState({ map, markersGroup, routesGroup });
+      this.setState({ map, markersGroup, routesGroup }, () => onMapAvailable(this.state));
     });
   }
 

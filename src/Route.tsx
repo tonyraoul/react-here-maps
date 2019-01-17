@@ -9,7 +9,7 @@ export interface Coordinates {
   lat: number;
   lon: number;
 }
-export interface Styles {
+export interface mapStyles {
   style? :object;
   arrows? :object;
 }
@@ -19,17 +19,7 @@ export interface RoutesProps {
     points?: Coordinates[];
     data? :object;
     zIndex? :number;
-    styles? :Styles;
-}
-// declare an interface containing the required and potential
-// props that can be passed to the HEREMap Marker component
-export interface RoutesProps {
-    points?: Coordinates[];
-    fillColor?: string;
-    strokeColor?: string;
-    lineWidth?: number;
-    data? :object;
-    zIndex? :number;
+    mapStyles? :mapStyles;
 }
 
 // declare an interface containing the potential context parameters
@@ -51,7 +41,7 @@ export class Route extends React.Component<RoutesProps, object> {
   private route: H.geo.LineString;
   private routeLine: H.map.Polyline;
   static defaultProps = {
-    styles: {
+    mapStyles: {
       style: {
         strokeColor: 'blue',
         fillColor: 'blue',
@@ -91,7 +81,7 @@ export class Route extends React.Component<RoutesProps, object> {
       map,
       routesGroup,
     } = this.context;
-    const { styles, data, zIndex } = this.props
+    const { mapStyles, data, zIndex } = this.props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;
@@ -100,7 +90,7 @@ export class Route extends React.Component<RoutesProps, object> {
         const { lat, lon } = point
         route.pushPoint(new H.geo.Point(lat, lon));
       })
-      routeLine = new H.map.Polyline(route, {style: styles.style, arrows: styles.arrows, zIndex, data });
+      routeLine = new H.map.Polyline(route, {style: mapStyles.style, arrows: mapStyles.arrows, zIndex, data });
       routesGroup.addObject(routeLine);
       this.route = route;
       this.routeLine = routeLine;

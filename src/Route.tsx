@@ -9,7 +9,18 @@ export interface Coordinates {
   lat: number;
   lon: number;
 }
-
+export interface Styles {
+  style? :object;
+  arrows? :object;
+}
+// declare an interface containing the required and potential
+// props that can be passed to the HEREMap Marker component
+export interface RoutesProps {
+    points?: Coordinates[];
+    data? :object;
+    zIndex? :number;
+    styles? :Styles;
+}
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap Marker component
 export interface RoutesProps {
@@ -39,7 +50,15 @@ export class Route extends React.Component<RoutesProps, object> {
 
   private route: H.geo.LineString;
   private routeLine: H.map.Polyline;
-  static defaultProps = { lineWidth: 4, fillColor: 'blue', strokeColor: 'blue' }
+  static defaultProps = {
+    styles: {
+      style: {
+        strokeColor: 'blue',
+        fillColor: 'blue',
+        lineWidth: 4,
+      }
+    }
+  }
   public componentWillReceiveProps(nextProps: RoutesProps) {
     const { map, routesGroup } = this.context;
     // it's cheaper to remove and add instead of deep comparision
@@ -72,7 +91,7 @@ export class Route extends React.Component<RoutesProps, object> {
       map,
       routesGroup,
     } = this.context;
-    const { lineWidth, fillColor, strokeColor, data, zIndex } = this.props
+    const { styles, data, zIndex } = this.props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;
@@ -81,12 +100,7 @@ export class Route extends React.Component<RoutesProps, object> {
         const { lat, lon } = point
         route.pushPoint(new H.geo.Point(lat, lon));
       })
-      routeLine = new H.map.Polyline(route, {
-        style: { lineWidth, fillColor, strokeColor },
-        arrows: { fillColor: 'rgba(255,255,255, 0.9)', frequency: 6, width: 0.9, length: 0.8 },
-        zIndex,
-        data
-      });
+      routeLine = new H.map.Polyline(route, {style: styles.style, arrows: styles.arrows, zIndex, data });
       routesGroup.addObject(routeLine);
       this.route = route;
       this.routeLine = routeLine;

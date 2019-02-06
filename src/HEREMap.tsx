@@ -19,6 +19,7 @@ export interface HEREMapProps extends H.Map.Options {
   animateZoom?: boolean;
   hidpi?: boolean;
   interactive?: boolean;
+  lg?: String;
   secure?: boolean;
   routes?: object[];
   transportData?: boolean;
@@ -110,6 +111,7 @@ export class HEREMap
         interactive,
         secure,
         zoom,
+        lg,
         routes,
         useSatellite,
         trafficLayer,
@@ -126,6 +128,7 @@ export class HEREMap
       });
       this.defaultLayers = platform.createDefaultLayers({
         ppi: hidpi ? 320 : 72,
+        lg,
       });
       const truckOverlayLayerOptions = {
         label: 'Tile Info Overlay',

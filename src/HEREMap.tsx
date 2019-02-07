@@ -108,7 +108,6 @@ export class HEREMap
         center,
         hidpi,
         interactive,
-        secure,
         zoom,
         routes,
         useSatellite,

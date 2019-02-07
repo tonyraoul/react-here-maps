@@ -8,6 +8,7 @@ import cache, { onAllLoad } from "./utils/cache";
 import getLink from "./utils/get-link";
 import getPlatform from "./utils/get-platform";
 import getScriptMap from "./utils/get-script-map";
+import { Language } from './utils/languages';
 import { Options } from "jsdom";
 
 // declare an interface containing the required and potential
@@ -19,7 +20,7 @@ export interface HEREMapProps extends H.Map.Options {
   animateZoom?: boolean;
   hidpi?: boolean;
   interactive?: boolean;
-  lg?: String;
+  lg?: Language;
   secure?: boolean;
   routes?: object[];
   transportData?: boolean;

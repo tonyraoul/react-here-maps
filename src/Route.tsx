@@ -9,7 +9,7 @@ export interface Coordinates {
   lat: number;
   lon: number;
 }
-export interface mapStyles {
+export interface MapStyles {
   style?: object;
   arrows?: object;
 }
@@ -19,7 +19,7 @@ export interface RoutesProps {
     points?: Coordinates[];
     data?: object;
     zIndex?: number;
-    mapStyles?: mapStyles;
+    mapStyles?: MapStyles;
 }
 
 // declare an interface containing the potential context parameters
@@ -38,9 +38,9 @@ export class Route extends React.Component<RoutesProps, object> {
   public static defaultProps = {
     mapStyles: {
       style: {
-        strokeColor: "blue",
         fillColor: "blue",
         lineWidth: 4,
+        strokeColor: "blue",
       },
     },
   };

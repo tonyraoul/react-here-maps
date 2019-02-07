@@ -126,11 +126,9 @@ export class HEREMap
       this.defaultLayers = platform.createDefaultLayers({
         ppi: hidpi ? 320 : 72,
       });
-      const truckOverlayLayerOptions = {
-        label: "Tile Info Overlay",
-        descr: "",
-        min: 8,
+      const truckOverlayLayerOptions: H.map.provider.ImageTileProvider.Options = {
         max: 20,
+        min: 8,
         getURL(col, row, level) {
           return ["https://",
           "1.base.maps.cit.api.here.com/maptile/2.1/truckonlytile/newest/normal.day/",
@@ -147,7 +145,7 @@ export class HEREMap
           appId,
           ].join("");
         },
-      } as H.map.provider.ImageTileProvider.Options;
+      };
       const truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
 
       this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
@@ -176,16 +174,25 @@ export class HEREMap
 
         // create the default UI for the map
         ui = H.ui.UI.createDefault(map, this.defaultLayers, language);
-        disableMapSettings && ui.removeControl("mapsettings");
+        if (disableMapSettings) {
+            ui.removeControl("mapsettings");
+        }
         this.setState({
           behavior,
           ui,
         });
       }
       if (trafficLayer) {
-        if (useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.traffic); } else { map.setBaseLayer(this.defaultLayers.normal.traffic); }
+        if (useSatellite) {
+          map.setBaseLayer(this.defaultLayers.satellite.traffic);
+        } else {
+          map.setBaseLayer(this.defaultLayers.normal.traffic);
+        }
        } else {
-         if (useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.map); } else { map.setBaseLayer(this.defaultLayers.normal.map); }
+        if (useSatellite) {
+            map.setBaseLayer(this.defaultLayers.satellite.map);
+        } else { map.setBaseLayer(this.defaultLayers.normal.map);
+        }
        }
 
       // make the map resize when the window gets resized
@@ -205,9 +212,15 @@ export class HEREMap
     const map = this.getMap();
     if (!map) { return; }
     if (nextProps.trafficLayer) {
-     if (nextProps.useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.traffic); } else { map.setBaseLayer(this.defaultLayers.normal.traffic); }
+      if (nextProps.useSatellite) {
+       map.setBaseLayer(this.defaultLayers.satellite.traffic); } else {
+       map.setBaseLayer(this.defaultLayers.normal.traffic);
+       }
     } else {
-      if (nextProps.useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.map); } else { map.setBaseLayer(this.defaultLayers.normal.map); }
+        if (nextProps.useSatellite) {
+          map.setBaseLayer(this.defaultLayers.satellite.map); } else {
+          map.setBaseLayer(this.defaultLayers.normal.map);
+        }
     }
     if (nextProps.transportData) {
       map.addLayer(this.truckOverlayLayer);

@@ -1,14 +1,14 @@
 import { debounce, uniqueId } from "lodash";
+import * as PropTypes from "prop-types";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as PropTypes from "prop-types";
 
+import { Options } from "jsdom";
 import HMapMethods from "./mixins/h-map-methods";
 import cache, { onAllLoad } from "./utils/cache";
 import getLink from "./utils/get-link";
 import getPlatform from "./utils/get-platform";
 import getScriptMap from "./utils/get-script-map";
-import { Options } from "jsdom";
 
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap component
@@ -22,12 +22,12 @@ export interface HEREMapProps extends H.Map.Options {
   secure?: boolean;
   routes?: object[];
   transportData?: boolean;
-  trafficLayer? :boolean;
-  incidentsLayer? :boolean;
-  useSatellite? :boolean;
+  trafficLayer?: boolean;
+  incidentsLayer?: boolean;
+  useSatellite?: boolean;
   disableMapSettings?: boolean;
-  onMapAvailable? :(state: HEREMapState) => void;
-  language? :string;
+  onMapAvailable?: (state: HEREMapState) => void;
+  language?: string;
 }
 
 // declare an interface containing the potential state flags
@@ -64,10 +64,10 @@ export class HEREMap
 
   // add the state property
   public state: HEREMapState = {};
-
-  private debouncedResizeMap: any;
   public truckOverlayLayer: H.map.layer.TileLayer;
   public defaultLayers: any;
+
+  private debouncedResizeMap: any;
   constructor(props: HEREMapProps, context: object) {
     super(props, context);
 
@@ -76,18 +76,18 @@ export class HEREMap
 
     // debounce the resize map method
     this.debouncedResizeMap = debounce(this.resizeMap, 200);
-    this.zoomOnMarkers = this.zoomOnMarkers.bind(this)
-    this.screenToGeo = this.screenToGeo.bind(this)
+    this.zoomOnMarkers = this.zoomOnMarkers.bind(this);
+    this.screenToGeo = this.screenToGeo.bind(this);
   }
-  public screenToGeo (x:number, y:number):H.geo.Point {
-    const { map } = this.state
-    return map.screenToGeo(x,y)
+  public screenToGeo(x: number, y: number): H.geo.Point {
+    const { map } = this.state;
+    return map.screenToGeo(x, y);
   }
   public zoomOnMarkers(animate: boolean = true) {
     const { map, markersGroup } = this.state;
-    if (!markersGroup) return
+    if (!markersGroup) { return; }
     const viewBounds = markersGroup.getBounds() ;
-    if (viewBounds) map.setViewBounds(viewBounds, animate);
+    if (viewBounds) { map.setViewBounds(viewBounds, animate); }
   }
   public getChildContext() {
     const {map, markersGroup, routesGroup} = this.state;
@@ -128,12 +128,11 @@ export class HEREMap
         ppi: hidpi ? 320 : 72,
       });
       const truckOverlayLayerOptions = {
-        label: 'Tile Info Overlay',
+        label: "Tile Info Overlay",
         descr: "",
         min: 8,
         max: 20,
-        getURL: function( col, row, level )
-        {
+        getURL(col, row, level) {
           return ["https://",
           "1.base.maps.cit.api.here.com/maptile/2.1/truckonlytile/newest/normal.day/",
           level,
@@ -146,12 +145,12 @@ export class HEREMap
           "&app_code=",
           appCode,
           "&app_id=",
-          appId
+          appId,
           ].join("");
-        }
-      } as H.map.provider.ImageTileProvider.Options; 
+        },
+      } as H.map.provider.ImageTileProvider.Options;
       const truckOverlayProvider = new H.map.provider.ImageTileProvider(truckOverlayLayerOptions);
-    
+
       this.truckOverlayLayer = new H.map.layer.TileLayer(truckOverlayProvider);
       const hereMapEl = ReactDOM.findDOMNode(this);
       const baseLayer = this.defaultLayers.normal.map;
@@ -166,10 +165,10 @@ export class HEREMap
       );
       const markersGroup = new H.map.Group();
       const routesGroup = new H.map.Group();
-      map.addObject(markersGroup)
-      map.addObject(routesGroup)
-      if(this.props.transportData) map.addLayer(this.truckOverlayLayer)
-      let ui:H.ui.UI;
+      map.addObject(markersGroup);
+      map.addObject(routesGroup);
+      if (this.props.transportData) { map.addLayer(this.truckOverlayLayer); }
+      let ui: H.ui.UI;
       if (interactive !== false) {
         // make the map interactive
         // MapEvents enables the event system
@@ -178,21 +177,18 @@ export class HEREMap
 
         // create the default UI for the map
         ui = H.ui.UI.createDefault(map, this.defaultLayers, language);
-        disableMapSettings && ui.removeControl('mapsettings')
+        disableMapSettings && ui.removeControl("mapsettings");
         this.setState({
           behavior,
           ui,
         });
       }
       if (trafficLayer) {
-        if(useSatellite) map.setBaseLayer(this.defaultLayers.satellite.traffic)
-        else map.setBaseLayer(this.defaultLayers.normal.traffic)
+        if (useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.traffic); } else { map.setBaseLayer(this.defaultLayers.normal.traffic); }
+       } else {
+         if (useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.map); } else { map.setBaseLayer(this.defaultLayers.normal.map); }
        }
-       else {
-         if(useSatellite) map.setBaseLayer(this.defaultLayers.satellite.map)
-         else map.setBaseLayer(this.defaultLayers.normal.map)
-       }
-      
+
       // make the map resize when the window gets resized
       window.addEventListener("resize", this.debouncedResizeMap);
 
@@ -207,25 +203,22 @@ export class HEREMap
   }
   // change the zoom and center automatically if the props get changed
   public componentWillReceiveProps(nextProps: HEREMapProps) {
-    const map = this.getMap()
-    if(!map) return
+    const map = this.getMap();
+    if (!map) { return; }
     if (nextProps.trafficLayer) {
-     if(nextProps.useSatellite) map.setBaseLayer(this.defaultLayers.satellite.traffic)
-     else map.setBaseLayer(this.defaultLayers.normal.traffic)
-    }
-    else {
-      if(nextProps.useSatellite) map.setBaseLayer(this.defaultLayers.satellite.map)
-      else map.setBaseLayer(this.defaultLayers.normal.map)
-    }
-    if(nextProps.transportData) {
-      map.addLayer(this.truckOverlayLayer)
+     if (nextProps.useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.traffic); } else { map.setBaseLayer(this.defaultLayers.normal.traffic); }
     } else {
-      map.removeLayer(this.truckOverlayLayer)
+      if (nextProps.useSatellite) { map.setBaseLayer(this.defaultLayers.satellite.map); } else { map.setBaseLayer(this.defaultLayers.normal.map); }
     }
-    if(nextProps.incidentsLayer) {
-      map.addLayer(this.defaultLayers.incidents)
+    if (nextProps.transportData) {
+      map.addLayer(this.truckOverlayLayer);
     } else {
-      map.removeLayer(this.defaultLayers.incidents)
+      map.removeLayer(this.truckOverlayLayer);
+    }
+    if (nextProps.incidentsLayer) {
+      map.addLayer(this.defaultLayers.incidents);
+    } else {
+      map.removeLayer(this.defaultLayers.incidents);
     }
   }
 

@@ -9,6 +9,8 @@ import cache, { onAllLoad } from "./utils/cache";
 import getLink from "./utils/get-link";
 import getPlatform from "./utils/get-platform";
 import getScriptMap from "./utils/get-script-map";
+import { Language } from './utils/languages';
+import { Options } from "jsdom";
 
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap component
@@ -19,6 +21,7 @@ export interface HEREMapProps extends H.Map.Options {
   animateZoom?: boolean;
   hidpi?: boolean;
   interactive?: boolean;
+  lg?: Language;
   secure?: boolean;
   routes?: object[];
   transportData?: boolean;
@@ -109,6 +112,7 @@ export class HEREMap
         hidpi,
         interactive,
         zoom,
+        lg,
         routes,
         useSatellite,
         trafficLayer,
@@ -125,6 +129,7 @@ export class HEREMap
       });
       this.defaultLayers = platform.createDefaultLayers({
         ppi: hidpi ? 320 : 72,
+        lg,
       });
       const truckOverlayLayerOptions: H.map.provider.ImageTileProvider.Options = {
         max: 20,

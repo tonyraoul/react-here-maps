@@ -55,7 +55,7 @@ export class Route extends React.Component<RoutesProps, object> {
     if (this.routeLine) {
       routesGroup.removeObject(this.routeLine);
     }
-    this.addRouteToMap(nextProps.points)
+    this.addRouteToMap(nextProps)
   }
   // remove the marker on unmount of the component
   public componentWillUnmount() {
@@ -70,18 +70,18 @@ export class Route extends React.Component<RoutesProps, object> {
     const {map} = this.context;
 
     if (map && !this.route) {
-      this.addRouteToMap(this.props.points);
+      this.addRouteToMap(this.props);
     }
 
     return null;
   }
 
-  private addRouteToMap(points:Coordinates[]) {
+  private addRouteToMap(props: RoutesProps){
     const {
       map,
       routesGroup,
     } = this.context;
-    const { mapStyles, data, zIndex } = this.props
+    const { mapStyles, data, zIndex, points } = props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;

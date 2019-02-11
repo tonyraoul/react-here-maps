@@ -1,5 +1,5 @@
-import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as React from "react";
 
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap Circle component

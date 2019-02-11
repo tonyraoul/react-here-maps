@@ -1,7 +1,7 @@
-import HEREMap, { HEREMapProps } from "../../src/HEREMap";
 import { mount, ReactWrapper } from "enzyme";
 import { assignIn } from "lodash";
 import * as React from "react";
+import HEREMap, { HEREMapProps } from "../../src/HEREMap";
 
 // mount a test component to the DOM
 export function mountComponent(userProps?: any): ReactWrapper<any, any> {

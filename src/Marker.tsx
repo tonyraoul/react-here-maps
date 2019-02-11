@@ -2,9 +2,9 @@
 // large numbers of markers of this type can be added to the map
 // very quickly and efficiently
 
+import * as PropTypes from "prop-types";
 import * as React from "react";
 import * as ReactDOMServer from "react-dom/server";
-import * as PropTypes from "prop-types";
 import getDomMarkerIcon from "./utils/get-dom-marker-icon";
 import getMarkerIcon from "./utils/get-marker-icon";
 
@@ -12,8 +12,8 @@ import getMarkerIcon from "./utils/get-marker-icon";
 // props that can be passed to the HEREMap Marker componengetMartkerIdt
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   bitmap?: string;
-  data? :any;
-  draggable? :boolean;
+  data?: any;
+  draggable?: boolean;
 }
 
 // declare an interface containing the potential context parameters
@@ -29,13 +29,13 @@ export class Marker extends React.Component<MarkerProps, object> {
     map: PropTypes.object,
     markersGroup: PropTypes.object,
   };
-  public constructor (props: MarkerProps, context: MarkerContext) {
-    super(props, context)
-  }
+  public static defaultProps = {draggable: false};
   public context: MarkerContext;
 
   private marker: H.map.DomMarker | H.map.Marker;
-  static defaultProps = {draggable: false};
+  public constructor(props: MarkerProps, context: MarkerContext) {
+    super(props, context);
+  }
   // change the position automatically if the props get changed
   public componentWillReceiveProps(nextProps: MarkerProps) {
     if (nextProps.lat !== this.props.lat || nextProps.lng !== this.props.lng) {
@@ -93,7 +93,7 @@ export class Marker extends React.Component<MarkerProps, object> {
       // provided via context
       marker = new H.map.DomMarker({lat, lng}, {icon});
       marker.draggable = this.props.draggable;
-      marker.setData(this.props.data)
+      marker.setData(this.props.data);
       markersGroup.addObject(marker);
 
     } else if (bitmap) {

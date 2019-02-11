@@ -9,8 +9,7 @@ import cache, { onAllLoad } from "./utils/cache";
 import getLink from "./utils/get-link";
 import getPlatform from "./utils/get-platform";
 import getScriptMap from "./utils/get-script-map";
-import { Language } from './utils/languages';
-import { Options } from "jsdom";
+import { Language } from "./utils/languages";
 
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap component
@@ -128,8 +127,8 @@ export class HEREMap
         useHTTPS: secure === true,
       });
       this.defaultLayers = platform.createDefaultLayers({
-        ppi: hidpi ? 320 : 72,
         lg,
+        ppi: hidpi ? 320 : 72,
       });
       const truckOverlayLayerOptions: H.map.provider.ImageTileProvider.Options = {
         max: 20,

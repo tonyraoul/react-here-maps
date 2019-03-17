@@ -15,7 +15,7 @@ export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   bitmap?: string;
   data?: any;
   draggable?: boolean;
-  children?: any;
+  children?: React.ReactElement<any>;
 }
 
 // declare an interface containing the potential context parameters
@@ -41,9 +41,9 @@ export class Marker extends React.Component<MarkerProps, object> {
   // change the position automatically if the props get changed
   public componentWillReceiveProps(nextProps: MarkerProps) {
     // Rerender the marker if child props change
-    if (React.Children.count(nextProps.children) > 0
-      && React.Children.count(this.props.children) > 0
-      && !isEqual(nextProps.children.props, this.props.children.props)) {
+    const nextChildProps = nextProps.children && nextProps.children.props
+    const childProps = this.props.children && this.props.children.props
+    if (nextChildProps && !isEqual(nextChildProps, childProps)) {
       const { markersGroup } = this.context;
       if (this.marker) {
         markersGroup.removeObject(this.marker);
@@ -60,7 +60,7 @@ export class Marker extends React.Component<MarkerProps, object> {
   }
   // remove the marker on unmount of the component
   public componentWillUnmount() {
-    const { map, markersGroup } = this.context;
+    const { markersGroup } = this.context;
 
     if (this.marker) {
       markersGroup.removeObject(this.marker);
@@ -77,9 +77,8 @@ export class Marker extends React.Component<MarkerProps, object> {
   }
 
   private renderChildren(children: any, lat: number, lng: number) {
-    const {
-      markersGroup,
-    } = this.context;
+    const { markersGroup } = this.context;
+
     // if children are provided, we render the provided react
     // code to an html string
     const html = ReactDOMServer.renderToStaticMarkup((

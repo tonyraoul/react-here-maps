@@ -2,23 +2,24 @@
 // large numbers of markers of this type can be added to the map
 // very quickly and efficiently
 
-import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as React from "react";
 
 export interface Coordinates {
   lat: number;
   lon: number;
 }
-
+export interface MapStyles {
+  style?: object;
+  arrows?: object;
+}
 // declare an interface containing the required and potential
 // props that can be passed to the HEREMap Marker component
 export interface RoutesProps {
     points?: Coordinates[];
-    fillColor?: string;
-    strokeColor?: string;
-    lineWidth?: number;
-    data? :object;
-    zIndex? :number;
+    data?: object;
+    zIndex?: number;
+    mapStyles?: MapStyles;
 }
 
 // declare an interface containing the potential context parameters
@@ -34,25 +35,33 @@ export class Route extends React.Component<RoutesProps, object> {
     map: PropTypes.object,
     routesGroup: PropTypes.object,
   };
+  public static defaultProps = {
+    mapStyles: {
+      style: {
+        fillColor: "blue",
+        lineWidth: 4,
+        strokeColor: "blue",
+      },
+    },
+  };
 
   public context: RoutesContext;
 
   private route: H.geo.LineString;
   private routeLine: H.map.Polyline;
-  static defaultProps = { lineWidth: 4, fillColor: 'blue', strokeColor: 'blue' }
   public componentWillReceiveProps(nextProps: RoutesProps) {
     const { map, routesGroup } = this.context;
     // it's cheaper to remove and add instead of deep comparision
-    if (this.route) {
+    if (this.routeLine) {
       routesGroup.removeObject(this.routeLine);
     }
-    this.addRouteToMap(nextProps.points)
+    this.addRouteToMap(nextProps)
   }
   // remove the marker on unmount of the component
   public componentWillUnmount() {
     const { map, routesGroup } = this.context;
 
-    if (this.route) {
+    if (this.routeLine) {
       routesGroup.removeObject(this.routeLine);
     }
   }
@@ -61,27 +70,27 @@ export class Route extends React.Component<RoutesProps, object> {
     const {map} = this.context;
 
     if (map && !this.route) {
-      this.addRouteToMap(this.props.points);
+      this.addRouteToMap(this.props);
     }
 
     return null;
   }
 
-  private addRouteToMap(points:Coordinates[]) {
+  private addRouteToMap(props: RoutesProps){
     const {
       map,
       routesGroup,
     } = this.context;
-    const { lineWidth, fillColor, strokeColor, data, zIndex } = this.props
+    const { mapStyles, data, zIndex, points } = props
     if (routesGroup) {
       let route: H.geo.LineString;
       let routeLine: H.map.Polyline;
       route = new H.geo.LineString();
-      points.forEach(point => {
-        const { lat, lon } = point
+      points.forEach((point) => {
+        const { lat, lon } = point;
         route.pushPoint(new H.geo.Point(lat, lon));
-      })
-      routeLine = new H.map.Polyline(route, {style: { lineWidth, fillColor, strokeColor }, zIndex, data });
+      });
+      routeLine = new H.map.Polyline(route, {style: mapStyles.style, arrows: mapStyles.arrows, zIndex, data });
       routesGroup.addObject(routeLine);
       this.route = route;
       this.routeLine = routeLine;

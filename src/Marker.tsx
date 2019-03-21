@@ -2,9 +2,10 @@
 // large numbers of markers of this type can be added to the map
 // very quickly and efficiently
 
+import * as PropTypes from "prop-types";
 import * as React from "react";
 import * as ReactDOMServer from "react-dom/server";
-import * as PropTypes from "prop-types";
+import * as isEqual from "react-fast-compare";
 import getDomMarkerIcon from "./utils/get-dom-marker-icon";
 import getMarkerIcon from "./utils/get-marker-icon";
 
@@ -12,8 +13,9 @@ import getMarkerIcon from "./utils/get-marker-icon";
 // props that can be passed to the HEREMap Marker componengetMartkerIdt
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   bitmap?: string;
-  data? :any;
-  draggable? :boolean;
+  data?: any;
+  draggable?: boolean;
+  children?: React.ReactElement<any>;
 }
 
 // declare an interface containing the potential context parameters
@@ -29,15 +31,26 @@ export class Marker extends React.Component<MarkerProps, object> {
     map: PropTypes.object,
     markersGroup: PropTypes.object,
   };
-  public constructor (props: MarkerProps, context: MarkerContext) {
-    super(props, context)
-  }
+  public static defaultProps = {draggable: false};
   public context: MarkerContext;
 
   private marker: H.map.DomMarker | H.map.Marker;
-  static defaultProps = {draggable: false};
+  public constructor(props: MarkerProps, context: MarkerContext) {
+    super(props, context);
+  }
   // change the position automatically if the props get changed
   public componentWillReceiveProps(nextProps: MarkerProps) {
+    // Rerender the marker if child props change
+    const nextChildProps = nextProps.children && nextProps.children.props
+    const childProps = this.props.children && this.props.children.props
+    if (nextChildProps && !isEqual(nextChildProps, childProps)) {
+      const { markersGroup } = this.context;
+      if (this.marker) {
+        markersGroup.removeObject(this.marker);
+      }
+      this.marker = this.renderChildren(nextProps.children, nextProps.lat, nextProps.lng)  
+      return
+    }  
     if (nextProps.lat !== this.props.lat || nextProps.lng !== this.props.lng) {
       this.setPosition({
         lat: nextProps.lat,
@@ -47,7 +60,7 @@ export class Marker extends React.Component<MarkerProps, object> {
   }
   // remove the marker on unmount of the component
   public componentWillUnmount() {
-    const { map, markersGroup } = this.context;
+    const { markersGroup } = this.context;
 
     if (this.marker) {
       markersGroup.removeObject(this.marker);
@@ -63,11 +76,31 @@ export class Marker extends React.Component<MarkerProps, object> {
     return null;
   }
 
+  private renderChildren(children: any, lat: number, lng: number) {
+    const { markersGroup } = this.context;
+
+    // if children are provided, we render the provided react
+    // code to an html string
+    const html = ReactDOMServer.renderToStaticMarkup((
+      <div className="dom-marker">
+        {children}
+      </div>
+    ));
+
+    // we then get a dom icon object from the wrapper method
+    const icon = getDomMarkerIcon(html);
+
+    // then create a dom marker instance and attach it to the map,
+    // provided via context
+    const marker = new H.map.DomMarker({lat, lng}, {icon});
+    marker.draggable = this.props.draggable;
+    marker.setData(this.props.data);
+    markersGroup.addObject(marker);
+    return marker
+  }
+
   private addMarkerToMap() {
-    const {
-      map,
-      markersGroup,
-    } = this.context;
+    const { markersGroup } = this.context;
 
     const {
       children,
@@ -78,24 +111,7 @@ export class Marker extends React.Component<MarkerProps, object> {
 
     let marker: H.map.DomMarker | H.map.Marker;
     if (React.Children.count(children) > 0) {
-      // if children are provided, we render the provided react
-      // code to an html string
-      const html = ReactDOMServer.renderToStaticMarkup((
-        <div className="dom-marker">
-          {children}
-        </div>
-      ));
-
-      // we then get a dom icon object from the wrapper method
-      const icon = getDomMarkerIcon(html);
-
-      // then create a dom marker instance and attach it to the map,
-      // provided via context
-      marker = new H.map.DomMarker({lat, lng}, {icon});
-      marker.draggable = this.props.draggable;
-      marker.setData(this.props.data)
-      markersGroup.addObject(marker);
-
+      marker = this.renderChildren(children, lat, lng)
     } else if (bitmap) {
       // if we have an image url and no react children, create a
       // regular icon instance

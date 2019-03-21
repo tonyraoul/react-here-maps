@@ -1,6 +1,6 @@
 {
-  "name": "react-here-maps",
-  "version": "0.4.1",
+  "name": "@impargo/react-here-maps",
+  "version": "1.3.0",
   "description": "React.js HERE Maps component",
   "main": "dist/main.js",
   "scripts": {
@@ -11,12 +11,12 @@
     "coverage:remap": "remap-istanbul -i coverage/coverage.json -o coverage/coverage.json -t json -e node_modules,test",
     "coverage:report": "istanbul report",
     "coverage:post": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "prepublishOnly": "npm run pretest && gulp",
+    "prepublishOnly": "gulp",
     "lint": "tslint --config tslint.json --project tsconfig.json --type-check"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Josh-ES/react-here-maps.git"
+    "url": "git+https://github.com/antoineraoulimpargo/react-here-maps.git"
   },
   "keywords": [
     "React.js",
@@ -39,9 +39,9 @@
   "author": "Josh-ES",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Josh-ES/react-here-maps/issues"
+    "url": "https://github.com/antoineraoulimpargo/react-here-maps/issues"
   },
-  "homepage": "https://github.com/Josh-ES/react-here-maps#readme",
+  "homepage": "https://github.com/antoineraoulimpargo/react-here-maps#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/chai": "^4.0.1",
@@ -70,6 +70,7 @@
     "gulp": "^3.9.1",
     "gulp-sass": "^3.1.0",
     "gulp-typescript": "^3.2.0",
+    "gulp-watch": "^5.0.1",
     "highlight.js": "^9.12.0",
     "html-loader": "^0.4.3",
     "imports-loader": "^0.7.1",
@@ -94,7 +95,9 @@
     "node-sass": "^4.5.3",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.12",
+    "react": "^16.8.1",
     "react-addons-test-utils": "^15.3.1",
+    "react-dom": "^16.8.1",
     "react-scroll": "^1.3.0",
     "remap-istanbul": "^0.9.5",
     "sass-loader": "^6.0.6",
@@ -114,8 +117,10 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "core-js": "^2.4.1",
+    "jsdom": "^13.2.0",
     "lodash": "^4.15.0",
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.6.2",
+    "react-fast-compare": "^2.0.4"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",

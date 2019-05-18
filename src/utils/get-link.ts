@@ -1,15 +1,15 @@
 // import from npm
-import * as Map from "es6-map";
+import "core-js";
 import { assignIn } from "lodash";
 
 // declare an interface for the object that is
 // used to describe each link and stored in the
 // map
-interface LinkState {
-    hasLoaded: boolean;
-    wasRejected: boolean;
-    error?: any;
-    link: HTMLLinkElement;
+export interface LinkState {
+  hasLoaded: boolean;
+  wasRejected: boolean;
+  error?: any;
+  link: HTMLLinkElement;
 }
 
 /**
@@ -24,28 +24,28 @@ const loadedLinks = new Map<string, LinkState>();
  * @param url {string} - The URL/location of the resource to be retrieved.
  */
 export function getLink(url: string, name: string) {
-    if (!loadedLinks.has(name) && !document.querySelector(`link[href="${url}"]`)) {
-        const link: HTMLLinkElement = document.createElement("link");
-        const body = document.getElementsByTagName("body")[0];
+  if (!loadedLinks.has(name) && !document.querySelector(`link[href="${url}"]`)) {
+    const link: HTMLLinkElement = document.createElement("link");
+    const body = document.getElementsByTagName("body")[0];
 
-        assignIn(link, {
-            href: url,
-            rel: "stylesheet",
-            type: "text/css",
-        });
+    assignIn(link, {
+      href: url,
+      rel: "stylesheet",
+      type: "text/css",
+    });
 
-        body.appendChild(link);
+    body.appendChild(link);
 
-        const linkObject: LinkState = {
-            hasLoaded: false,
-            link,
-            wasRejected: false,
-        };
+    const linkObject: LinkState = {
+      hasLoaded: false,
+      link,
+      wasRejected: false,
+    };
 
-        loadedLinks.set(name, linkObject);
-    }
+    loadedLinks.set(name, linkObject);
+  }
 
-    return loadedLinks.get(name);
+  return loadedLinks.get(name);
 }
 
 // make the "getLink" method the default export

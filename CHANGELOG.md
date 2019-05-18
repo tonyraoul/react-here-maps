@@ -3,7 +3,59 @@
 Every change, update, bug fix or new feature will be documented in this file as new releases are published. The entire project is written in TypeScript, so references to updates to type definitions, typings dependencies etc. will be included here.
 
 <a name="Unreleased"></a>
-### Unreleased
+
+### 0.4.0
+
+#### New Features
+
+*   Resizing
+    *   Made the map resize on the window resize event, so the issue of blank tiles being rendered at the edge of an interactive map when the window is resized is no longer present.
+
+#### Changes
+
+*   Packages
+    *   Removed use of the typings tool from the project, and swapped over to @types packages to provide type declarations.
+    *   Updated all dependencies to their latest versions.
+
+### 0.3.3
+
+*   SSL Connections
+    *   Force the use of HTTPS to load the HERE Maps UI stylesheet if the "secure" flag on the HEREMap instance is set to true.
+
+### 0.3.2
+
+*   SSL Connections
+    *   Force the use of HTTPS to load the HERE Maps scripts if the "secure" flag on the HEREMap instance is set to true.
+
+### 0.3.1
+
+*   Type Definitions
+    *   Source the type definitions for this project from DefinitelyTyped instead of directly bundling the files.
+
+### 0.3.0
+
+*   Circle
+    *   Introduced a new React component, Circle, to create circles on maps provided by HERE Maps.
+    *   Encapsulate the Circle behaviour from the HERE Maps API, but not that of the other provided Geoshapes.
+    *   Component is used as a child of a HEREMap component.
+    *   Component simply creates a circle of the given radius at the given location.
+    
+*   Automatic Position Changes of Circle and Marker instances
+    *   When the lat/lng props of a Circle or Marker instance change, their position automatically changes.
+    *   When the rad prop of a Circle instance changes, the radius automatically changes to the new value.
+    
+*   Removal of Map Children
+    *   We now remove markers and circles when their wrapper component is unmounted.
+
+### 0.2.1 (2016-08-29)
+
+#### Bug Fixes
+
+*   react-addons-test-utils
+    *   The react-addons-test-utils package fits better as a development dependency.
+    *   It's only use in this project is with the Karma/PhantomJS client testing, it is not used in runtime code.
+
+### 0.2.0 (2016-08-28)
 
 #### New Features
 
@@ -14,6 +66,22 @@ Every change, update, bug fix or new feature will be documented in this file as 
     *   If the component has children, we convert the children to a string and use that string as a DomMarker.
     *   If an bitmap property is provided, use that to create a normal marker instance (usually a locally-available image).
     *   Otherwise, just create a default marker at the provided location.
+    
+*   Interactive Mode
+    *   Added an interactive prop to the HEREMap component.
+    *   Defaults to true.
+    *   If set to false we do not attach the mouse event listeners or the UI components from the HERE Maps API.
+    *   Basically renders a static map if interactive is set to false.
+    
+*   Secure Mode
+    *   Added a secure prop to the HEREMap component.
+    *   If set to true, the 'useHTTPS' flag on the Platform instance associated with this react component will be set to true.
+    *   In other words, HTTPS will be used if secure is set to true.
+    
+#### Changes
+
+*   Demo Site
+    *   Vastly updated demo site with multiple examples and freshly-designed UI.
 
 ### 0.1.0 (2016-08-26)
 
@@ -37,7 +105,7 @@ Every change, update, bug fix or new feature will be documented in this file as 
     *   Added jquery. Removed cheerio.
     *   Added karma-scss-preprocessor. Peer dependency node-sass.
 
-### 0.07 (2016-08-25)
+### 0.0.7 (2016-08-25)
 
 #### New Features
 

@@ -1,17 +1,17 @@
 {
   "files": [
-    "src/main.ts",
-    "typings/index.d.ts"
+    "src/main.ts"
   ],
   "compilerOptions": {
     "jsx": "react",
-    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "target": "es5",
+    "target": "es6",
+    "module": "commonjs",
     "experimentalDecorators": true,
     "sourceMap": false,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "declaration": true
   },
   "awesomeTypescriptLoaderOptions": {
     "resolveGlobs": true,

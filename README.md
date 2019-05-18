@@ -1,3 +1,5 @@
+### Archived
+Please use http://github.com/jlabeit/react-here-maps/
 ### Unofficial fork
 
 #### Differences from original package
